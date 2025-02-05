@@ -2,7 +2,7 @@
 
 The first Hub script for UFG.
 
-Get it [here](https://github.com/EdgeIY/infiniteyield/wiki)
+Get it [here]()
 
  - Currently () functions
  - Open Source
