@@ -112,12 +112,12 @@ local PalletKeybindInput = KeybindsTab:CreateInput({
    CurrentValue = "G",
    PlaceholderText = "Enter new key",
    RemoveTextAfterFocusLost = false,
-   Flag = "PalletInputKeybind1", -- Unique flag for Pallet keybind input
+   Flag = "PalletInputKeybind1",
    Callback = function(Text)
       if type(Text) == "string" and Text:match("^[A-Za-z0-9]$") then
-         PalletKeybind:Set(string.upper(Text)) -- Используем string.upper()
-      else
-         print("Invalid key! Only English letters and numbers are allowed.")
+         local upperText = string.upper(Text)
+         PalletKeybind:Set(upperText)
+         PalletKeybindInput:Set(upperText) -- Обновляем поле
       end
    end,
 })
