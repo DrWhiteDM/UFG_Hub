@@ -251,7 +251,7 @@ local Toggle = HacksTab:CreateToggle({
     Name = "ESP",
     CurrentValue = false,
     Flag =
- "ESP_Toggle",
+ "ESPToggle1",
     Callback = function(Value)
         toggleESP(Value)
     end,
