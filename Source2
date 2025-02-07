@@ -107,18 +107,21 @@ local SmallPotionKeybind = InvisibleTab:CreateKeybind({
 
 -- Input fields
 -- Pallet Keybind Input
+local lastValidKey = "G"
+
 local PalletKeybindInput = KeybindsTab:CreateInput({
    Name = "Pallet",
-   CurrentValue = "G",
+   CurrentValue = lastValidKey,
    PlaceholderText = "Enter new key",
    RemoveTextAfterFocusLost = false,
    Flag = "PalletInputKeybind1",
    Callback = function(Text)
       if type(Text) == "string" and Text:match("^[A-Za-z0-9]$") then
-         PalletKeybind:Set(string.upper(Text))
-         PalletKeybindInput:Set(string.upper(Text)) -- Обновляем поле ввода
+         lastValidKey = string.upper(Text)
+         PalletKeybind:Set(lastValidKey)
+         PalletKeybindInput:Set(lastValidKey)
       else
-         PalletKeybindInput:Set(PalletKeybind.CurrentKeybind) -- Возвращаем предыдущее значение
+         PalletKeybindInput:Set(lastValidKey)
       end
    end,
 })
