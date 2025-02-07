@@ -32,6 +32,7 @@ local Window = Rayfield:CreateWindow({
 local HacksTab = Window:CreateTab("Hacks", 4483362458)
 local VisualTab = Window:CreateTab("Visual", 4483362458)
 local KeybindsTab = Window:CreateTab("Keybinds", 4483362458)
+local TeleportTab = Window:CreateTab("Teleport", 4483362458)
 local InvisibleTab = Window:CreateTab("Invisible", 4483362458)
 
 -- Keybinds
