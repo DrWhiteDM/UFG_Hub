@@ -126,9 +126,11 @@ local SpeedyPotionKeybindInput = KeybindsTab:CreateInput({
    CurrentValue = "C",
    PlaceholderText = "Enter new key",
    RemoveTextAfterFocusLost = false,
-   Flag = "SpeedyPotionInputKeybind1", -- Unique flag for Speedy Potion keybind input
+   Flag = "SpeedyPotionKeybind1", -- Unique flag for Pallet keybind input
    Callback = function(Text)
-      SpeedyPotionKeybind:Set(Text)
+      if type(Text) == "string" and Text:match("^[A-Za-z0-9]$") then
+         SpeedyPotionKeybind:Set(string.upper(Text))
+      end
    end,
 })
 
@@ -174,7 +176,6 @@ local SkinDropdown = VisualTab:CreateDropdown({
    Name = "Skin Lines",
    Options = {"Default", "Gravity", "Frozen"},
    CurrentOption = "Default",
-   MultipleOptions = false,
    Flag = "Dropdown1",
    Callback = function(Options)
       game.Players.LocalPlayer:SetAttribute("Skin", Options[1])
