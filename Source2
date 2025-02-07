@@ -300,8 +300,11 @@ local function getPlayerList()
 end
 
 local function refreshPlayerDropdown()
-    PlayerDropdown:Destroy()  -- Удаляем старый дропдаун
-    PlayerDropdown = TeleportTab:CreateDropdown({
+    if PlayerDropdown then
+        PlayerDropdown.Parent = nil -- Отключаем старый дропдаун
+    end
+    
+    local newDropdown = TeleportTab:CreateDropdown({
         Name = "Choose player",
         Options = getPlayerList(),
         CurrentOption = nil,
@@ -311,6 +314,12 @@ local function refreshPlayerDropdown()
             SelectedPlayer = Option[1]
         end,
     })
+    
+    if PlayerDropdown then
+        PlayerDropdown:Destroy() -- Удаляем старый дропдаун
+    end
+    
+    PlayerDropdown = newDropdown -- Обновляем переменную
 end
 
 local RefreshButton = TeleportTab:CreateButton({
