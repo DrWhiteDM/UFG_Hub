@@ -306,7 +306,7 @@ local PlayerDropdown = TeleportTab:CreateDropdown({
     MultipleOptions = false,
     Flag = "PlayerDropdown1",
     Callback = function(Option)
-        SelectedPlayer = Option[1]  -- Сохраняем выбранного игрока
+        SelectedPlayer = Option[1]
     end,
 })
 
