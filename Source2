@@ -299,21 +299,24 @@ local function getPlayerList()
     return players
 end
 
-local PlayerDropdown = TeleportTab:CreateDropdown({
-    Name = "Chose player",
-    Options = getPlayerList(),
-    CurrentOption = nil,
-    MultipleOptions = false,
-    Flag = "PlayerDropdown1",
-    Callback = function(Option)
-        SelectedPlayer = Option[1]  -- Сохраняем выбранного игрока
-    end,
-})
+local function refreshPlayerDropdown()
+    PlayerDropdown:Destroy()  -- Удаляем старый дропдаун
+    PlayerDropdown = TeleportTab:CreateDropdown({
+        Name = "Choose player",
+        Options = getPlayerList(),
+        CurrentOption = nil,
+        MultipleOptions = false,
+        Flag = "PlayerDropdown1",
+        Callback = function(Option)
+            SelectedPlayer = Option[1]
+        end,
+    })
+end
 
 local RefreshButton = TeleportTab:CreateButton({
     Name = "Refresh list",
     Callback = function()
-        PlayerDropdown:SetOptions(getPlayerList())
+        refreshPlayerDropdown()
     end,
 })
 
