@@ -55,6 +55,17 @@ local PalletKeybind = KeybindsTab:CreateKeybind({
    end,
 })
 
+local PalletKeybindInput = KeybindsTab:CreateInput({
+   Name = "Change Pallet Keybind",
+   CurrentValue = "G",
+   PlaceholderText = "Enter new key",
+   RemoveTextAfterFocusLost = false,
+   Flag = "InputKeybind1",
+   Callback = function(Text)
+      PalletKeybind:Set(Text)
+   end,
+})
+
 local SpeedyPotionKeybind = KeybindsTab:CreateKeybind({
    Name = "Speedy Potion",
    CurrentKeybind = "C",
