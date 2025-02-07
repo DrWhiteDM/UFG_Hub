@@ -300,17 +300,13 @@ local function getPlayerList()
 end
 
 local PlayerDropdown = TeleportTab:CreateDropdown({
-    Name = "Choose player",
+    Name = "Выберите игрока",
     Options = getPlayerList(),
-    CurrentOption = "",
+    CurrentOption = nil,
     MultipleOptions = false,
     Flag = "PlayerDropdown1",
     Callback = function(Option)
-        if type(Option) == "table" and #Option > 0 then
-            SelectedPlayer = Option[1]
-        else
-            SelectedPlayer = nil
-        end
+        SelectedPlayer = Option[1]  -- Сохраняем выбранного игрока
     end,
 })
 
@@ -326,10 +322,7 @@ local function teleportToPlayer(targetPlayerName)
     local targetPlayer = game.Players:FindFirstChild(targetPlayerName)
 
     if targetPlayer and targetPlayer.Character and targetPlayer.Character:FindFirstChild("HumanoidRootPart") then
-        local character = localPlayer.Character
-        if character and character:FindFirstChild("HumanoidRootPart") then
-            character.HumanoidRootPart.CFrame = targetPlayer.Character.HumanoidRootPart.CFrame
-        end
+        localPlayer.Character:MoveTo(targetPlayer.Character.HumanoidRootPart.Position)
     end
 end
 
