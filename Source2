@@ -115,7 +115,7 @@ local PalletKeybindInput = KeybindsTab:CreateInput({
    Flag = "PalletInputKeybind1", -- Unique flag for Pallet keybind input
    Callback = function(Text)
       if type(Text) == "string" and Text:match("^[A-Za-z0-9]$") then
-         PalletKeybind:Set(string.upper(Text)) -- Используем string.upper()
+         PalletKeybind:Set(string.upper(Text))
       end
    end,
 })
