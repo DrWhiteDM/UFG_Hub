@@ -285,7 +285,6 @@ local InfiniteJump_Toggle = HacksTab:CreateToggle({
 })
 
 -- Teleport Tab
--- Teleport
 local SelectedPlayer = nil
 
 local function getPlayerList()
@@ -299,18 +298,18 @@ local function getPlayerList()
 end
 
 local PlayerDropdown = TeleportTab:CreateDropdown({
-    Name = "Выберите игрока",
+    Name = "Select Player",
     Options = getPlayerList(),
     CurrentOption = nil,
     MultipleOptions = false,
-    Flag = "PlayerDropdown",
+    Flag = "PlayerDropdown1",
     Callback = function(Option)
-        SelectedPlayer = Option[1]  -- Сохраняем выбранного игрока
+        SelectedPlayer = Option[1]
     end,
 })
 
 local RefreshButton = TeleportTab:CreateButton({
-    Name = "Обновить список",
+    Name = "Refresh List",
     Callback = function()
         PlayerDropdown:SetOptions(getPlayerList())
     end,
@@ -321,7 +320,10 @@ local function teleportToPlayer(targetPlayerName)
     local targetPlayer = game.Players:FindFirstChild(targetPlayerName)
 
     if targetPlayer and targetPlayer.Character and targetPlayer.Character:FindFirstChild("HumanoidRootPart") then
-        localPlayer.Character:MoveTo(targetPlayer.Character.HumanoidRootPart.Position)
+        local hrp = localPlayer.Character and localPlayer.Character:FindFirstChild("HumanoidRootPart")
+        if hrp then
+            hrp.CFrame = targetPlayer.Character.HumanoidRootPart.CFrame + Vector3.new(0, 2, 0) -- Teleport slightly above
+        end
     end
 end
 
