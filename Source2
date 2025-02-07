@@ -291,7 +291,7 @@ local SelectedPlayer = nil
 
 local function getPlayerList()
     local players = {}
-    for _, player in pairs(game:GetService("Players"):GetPlayers()) do
+    for _, player in ipairs(game:GetService("Players"):GetPlayers()) do
         if player ~= game.Players.LocalPlayer then
             table.insert(players, player.Name)
         end
@@ -306,7 +306,7 @@ local PlayerDropdown = TeleportTab:CreateDropdown({
     MultipleOptions = false,
     Flag = "PlayerDropdown1",
     Callback = function(Option)
-        SelectedPlayer = Option[1]  -- Сохраняем выбранного игрока
+        SelectedPlayer = Option  -- Просто строка, без [1]
     end,
 })
 
@@ -314,6 +314,7 @@ local RefreshButton = TeleportTab:CreateButton({
     Name = "Refresh list",
     Callback = function()
         PlayerDropdown:SetOptions(getPlayerList())
+        SelectedPlayer = nil  -- Сбрасываем выбор
     end,
 })
 
@@ -322,7 +323,8 @@ local function teleportToPlayer(targetPlayerName)
     local targetPlayer = game.Players:FindFirstChild(targetPlayerName)
 
     if targetPlayer and targetPlayer.Character and targetPlayer.Character:FindFirstChild("HumanoidRootPart") then
-        localPlayer.Character:MoveTo(targetPlayer.Character.HumanoidRootPart.Position)
+        local hrp = targetPlayer.Character.HumanoidRootPart
+        localPlayer.Character:MoveTo(hrp.Position)
     end
 end
 
