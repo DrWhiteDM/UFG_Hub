@@ -180,9 +180,9 @@ local SmallPotionKeybindInput = KeybindsTab:CreateInput({
 -- Skins
 local SkinDropdown = VisualTab:CreateDropdown({
    Name = "Skin Lines",
-   Options = {"Default", "Gravity", "Frozen"},
+   Options = {"Default", "Gravity", "Frozen", "Watery", "Crystalys", "Star Rail", "Andromeda", "Electric", "Pink Electric", "Slicer", "Red Shift", "Silk Way", "Ninja Slayer", "Anti Matter", "Glitched", "Musical", "Star Path", "Volcano", "Black Hole", "Circinus", "Day Star", "Dusty Gold", "Sun Flower", "Sun Burn", "Sakura", "Pink Flame", "Vault Of Souls"},
    CurrentOption = "Default",
-   Flag = "Dropdown1",
+   Flag = "SkinDropdown1",
    Callback = function(Options)
       game.Players.LocalPlayer:SetAttribute("Skin", Options[1])
    end,
@@ -194,7 +194,7 @@ local GemInput = VisualTab:CreateInput({
    CurrentValue = "",
    PlaceholderText = "Enter number",
    RemoveTextAfterFocusLost = false,
-   Flag = "Input1",
+   Flag = "GemInput1",
    Callback = function(Text)
       local numberValue = tonumber(Text)
       if numberValue then
