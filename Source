@@ -135,7 +135,10 @@ local GemInput = VisualTab:CreateInput({
    RemoveTextAfterFocusLost = false,
    Flag = "Input1",
    Callback = function(Text)
-      game.Players.LocalPlayer:SetAttribute("Rupees", Text) -- The function that takes place when the input is changed
+      local numberValue = tonumber(Text)
+      if numberValue then
+   game.Players.LocalPlayer:SetAttribute("Rupees", numberValue)
+      end -- The function that takes place when the input is changed
    -- The variable (Text) is a string for the value in the text box
    end,
 })
