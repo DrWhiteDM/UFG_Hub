@@ -288,6 +288,7 @@ local InfiniteJump_Toggle = HacksTab:CreateToggle({
 -- Teleport Tab
 -- Teleport
 local SelectedPlayer = nil
+local PlayerDropdown  
 
 local function getPlayerList()
     local players = {}
@@ -299,21 +300,29 @@ local function getPlayerList()
     return players
 end
 
-local PlayerDropdown = TeleportTab:CreateDropdown({
-    Name = "Chose player",
-    Options = getPlayerList(),
-    CurrentOption = nil,
-    MultipleOptions = false,
-    Flag = "PlayerDropdown1",
-    Callback = function(Option)
-        SelectedPlayer = Option[1]  -- Сохраняем выбранного игрока
-    end,
-})
+local function createPlayerDropdown()
+    if PlayerDropdown then
+        PlayerDropdown:Destroy()
+    end
+
+    PlayerDropdown = TeleportTab:CreateDropdown({
+        Name = "Chose player",
+        Options = getPlayerList(),
+        CurrentOption = nil,
+        MultipleOptions = false,
+        Flag = "PlayerDropdown1",
+        Callback = function(Option)
+            SelectedPlayer = Option[1]
+        end,
+    })
+end
+
+createPlayerDropdown()
 
 local RefreshButton = TeleportTab:CreateButton({
     Name = "Refresh list",
     Callback = function()
-        PlayerDropdown:SetOptions(getPlayerList())
+        createPlayerDropdown()
     end,
 })
 
