@@ -140,9 +140,11 @@ local AntiGPotionKeybindInput = KeybindsTab:CreateInput({
    CurrentValue = "V",
    PlaceholderText = "Enter new key",
    RemoveTextAfterFocusLost = false,
-   Flag = "AntiGPotionInputKeybind1", -- Unique flag for AntiG Potion keybind input
+   Flag = "AntiGPotionInputKeybind1",
    Callback = function(Text)
-      AntiGPotionKeybind:Set(Text)
+      if type(Text) == "string" and Text:match("^[A-Za-z0-9]$") then
+         AntiGPotionKeybind:Set(string.upper(Text))
+      end
    end,
 })
 
@@ -152,9 +154,11 @@ local LargePotionKeybindInput = KeybindsTab:CreateInput({
    CurrentValue = "Z",
    PlaceholderText = "Enter new key",
    RemoveTextAfterFocusLost = false,
-   Flag = "LargePotionInputKeybind1", -- Unique flag for Large Potion keybind input
+   Flag = "LargePotionInputKeybind1",
    Callback = function(Text)
-      LargePotionKeybind:Set(Text)
+      if type(Text) == "string" and Text:match("^[A-Za-z0-9]$") then
+         LargePotionKeybind:Set(string.upper(Text))
+      end
    end,
 })
 
@@ -164,9 +168,11 @@ local SmallPotionKeybindInput = KeybindsTab:CreateInput({
    CurrentValue = "X",
    PlaceholderText = "Enter new key",
    RemoveTextAfterFocusLost = false,
-   Flag = "SmallPotionInputKeybind1", -- Unique flag for Small Potion keybind input
+   Flag = "SmallPotionInputKeybind1",
    Callback = function(Text)
-      SmallPotionKeybind:Set(Text)
+      if type(Text) == "string" and Text:match("^[A-Za-z0-9]$") then
+         SmallPotionKeybind:Set(string.upper(Text))
+      end
    end,
 })
 
