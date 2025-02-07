@@ -1,15 +1,15 @@
 local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
 
 local Window = Rayfield:CreateWindow({
-   Name = "ufg hub",
+   Name = "Untitled Fling Game Hub",
    Icon = 0,
-   LoadingTitle = "ufg hub",
+   LoadingTitle = "Untitled Fling Game Hub",
    LoadingSubtitle = "by DrWhite & wellof",
    Theme = "Default",
    ConfigurationSaving = {
       Enabled = false,
       FolderName = nil,
-      FileName = "Big Hub"
+      FileName = "Untitled Fling Game Hub"
    },
    Discord = {
       Enabled = false,
