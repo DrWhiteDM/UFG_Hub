@@ -117,12 +117,12 @@ local PalletKeybindInput = KeybindsTab:CreateInput({
    Flag = "PalletInputKeybind1",
    Callback = function(Text)
       if type(Text) == "string" and Text:match("^[A-Za-z0-9]$") then
-         lastValidKey = string.upper(Text)
+         lastValidKey = string.upper(Text) 
          PalletKeybind:Set(lastValidKey)
-         PalletKeybindInput:Set(lastValidKey)
-      else
-         PalletKeybindInput:Set(lastValidKey)
       end
+      task.defer(function() 
+         PalletKeybindInput:Set(lastValidKey)
+      end)
    end,
 })
 
