@@ -54,3 +54,93 @@ local PalletKeybind = KeybindsTab:CreateKeybind({
    -- The variable (Keybind) is a boolean for whether the keybind is being held or not (HoldToInteract needs to be true)
    end,
 })
+
+local PalletKeybind = KeybindsTab:CreateKeybind({
+   Name = "Speedy Potion",
+   CurrentKeybind = "C",
+   HoldToInteract = false,
+   Flag = "Keybind1", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
+   Callback = function(Keybind)
+   local args = {
+      [1] = "Speedy Potion"
+   }
+ 
+   game:GetService("ReplicatedStorage").Spawn:InvokeServer(unpack(args)) -- The function that takes place when the keybind is pressed
+   -- The variable (Keybind) is a boolean for whether the keybind is being held or not (HoldToInteract needs to be true)
+   end,
+})
+
+local PalletKeybind = KeybindsTab:CreateKeybind({
+   Name = "AntiG Potion",
+   CurrentKeybind = "V",
+   HoldToInteract = false,
+   Flag = "Keybind1", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
+   Callback = function(Keybind)
+   local args = {
+      [1] = "AntiG Potion"
+   }
+ 
+   game:GetService("ReplicatedStorage").Spawn:InvokeServer(unpack(args)) -- The function that takes place when the keybind is pressed
+   -- The variable (Keybind) is a boolean for whether the keybind is being held or not (HoldToInteract needs to be true)
+   end,
+})
+
+local PalletKeybind = KeybindsTab:CreateKeybind({
+   Name = "Large Potion",
+   CurrentKeybind = "Z",
+   HoldToInteract = false,
+   Flag = "Keybind1", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
+   Callback = function(Keybind)
+   local args = {
+      [1] = "Large Potion"
+   }
+ 
+   game:GetService("ReplicatedStorage").Spawn:InvokeServer(unpack(args)) -- The function that takes place when the keybind is pressed
+   -- The variable (Keybind) is a boolean for whether the keybind is being held or not (HoldToInteract needs to be true)
+   end,
+})
+
+local PalletKeybind = KeybindsTab:CreateKeybind({
+   Name = "Small Potion",
+   CurrentKeybind = "X",
+   HoldToInteract = false,
+   Flag = "Keybind1", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
+   Callback = function(Keybind)
+   local args = {
+      [1] = "Small Potion"
+   }
+ 
+   game:GetService("ReplicatedStorage").Spawn:InvokeServer(unpack(args)) -- The function that takes place when the keybind is pressed
+   -- The variable (Keybind) is a boolean for whether the keybind is being held or not (HoldToInteract needs to be true)
+   end,
+})
+
+local PalletKeybind = KeybindsTab:CreateKeybind({
+   Name = "Metal Potion",
+   CurrentKeybind = "B",
+   HoldToInteract = false,
+   Flag = "Keybind1", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
+   Callback = function(Keybind)
+   local args = {
+      [1] = "Metal Potion"
+   }
+ 
+   game:GetService("ReplicatedStorage").Spawn:InvokeServer(unpack(args)) -- The function that takes place when the keybind is pressed
+   -- The variable (Keybind) is a boolean for whether the keybind is being held or not (HoldToInteract needs to be true)
+   end,
+})
+
+local PalletKeybind = KeybindsTab:CreateKeybind({
+   Name = "Noodle Potion",
+   CurrentKeybind = "N",
+   HoldToInteract = false,
+   Flag = "Keybind1", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
+   Callback = function(Keybind)
+   local args = {
+      [1] = "Noodle Potion"
+   }
+ 
+   game:GetService("ReplicatedStorage").Spawn:InvokeServer(unpack(args)) -- The function that takes place when the keybind is pressed
+   -- The variable (Keybind) is a boolean for whether the keybind is being held or not (HoldToInteract needs to be true)
+   end,
+})
