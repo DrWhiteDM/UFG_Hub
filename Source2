@@ -300,13 +300,13 @@ local function getPlayerList()
 end
 
 local PlayerDropdown = TeleportTab:CreateDropdown({
-    Name = "Chose player",
+    Name = "Choose player",
     Options = getPlayerList(),
     CurrentOption = nil,
     MultipleOptions = false,
     Flag = "PlayerDropdown1",
     Callback = function(Option)
-        SelectedPlayer = Option[1]  -- Сохраняем выбранного игрока
+        SelectedPlayer = Option[1]
     end,
 })
 
@@ -316,6 +316,15 @@ local RefreshButton = TeleportTab:CreateButton({
         PlayerDropdown:SetOptions(getPlayerList())
     end,
 })
+
+local function teleportToPlayer(targetPlayerName)
+    local localPlayer = game.Players.LocalPlayer
+    local targetPlayer = game.Players:FindFirstChild(targetPlayerName)
+
+    if targetPlayer and targetPlayer.Character and targetPlayer.Character:FindFirstChild("HumanoidRootPart") then
+        localPlayer.Character:WaitForChild("HumanoidRootPart").CFrame = targetPlayer.Character.HumanoidRootPart.CFrame
+    end
+end
 
 local TeleportButton = TeleportTab:CreateButton({
     Name = "Teleport",
