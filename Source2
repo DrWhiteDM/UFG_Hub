@@ -114,7 +114,11 @@ local PalletKeybindInput = KeybindsTab:CreateInput({
    RemoveTextAfterFocusLost = false,
    Flag = "PalletInputKeybind1", -- Unique flag for Pallet keybind input
    Callback = function(Text)
-      PalletKeybind:Set(Text:upper())
+      if type(Text) == "string" and Text:match("^[A-Za-z0-9]$") then
+         PalletKeybind:Set(string.upper(Text)) -- Используем string.upper()
+      else
+         print("Invalid key! Only English letters and numbers are allowed.")
+      end
    end,
 })
 
@@ -126,7 +130,7 @@ local SpeedyPotionKeybindInput = KeybindsTab:CreateInput({
    RemoveTextAfterFocusLost = false,
    Flag = "SpeedyPotionInputKeybind1", -- Unique flag for Speedy Potion keybind input
    Callback = function(Text)
-      SpeedyPotionKeybind:Set(Text:upper())
+      SpeedyPotionKeybind:Set(Text)
    end,
 })
 
@@ -138,7 +142,7 @@ local AntiGPotionKeybindInput = KeybindsTab:CreateInput({
    RemoveTextAfterFocusLost = false,
    Flag = "AntiGPotionInputKeybind1", -- Unique flag for AntiG Potion keybind input
    Callback = function(Text)
-      AntiGPotionKeybind:Set(Text:upper())
+      AntiGPotionKeybind:Set(Text)
    end,
 })
 
@@ -150,7 +154,7 @@ local LargePotionKeybindInput = KeybindsTab:CreateInput({
    RemoveTextAfterFocusLost = false,
    Flag = "LargePotionInputKeybind1", -- Unique flag for Large Potion keybind input
    Callback = function(Text)
-      LargePotionKeybind:Set(Text:upper())
+      LargePotionKeybind:Set(Text)
    end,
 })
 
@@ -162,7 +166,7 @@ local SmallPotionKeybindInput = KeybindsTab:CreateInput({
    RemoveTextAfterFocusLost = false,
    Flag = "SmallPotionInputKeybind1", -- Unique flag for Small Potion keybind input
    Callback = function(Text)
-      SmallPotionKeybind:Set(Text:upper())
+      SmallPotionKeybind:Set(Text)
    end,
 })
 
