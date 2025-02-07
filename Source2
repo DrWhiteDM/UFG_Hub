@@ -286,8 +286,8 @@ local InfiniteJump_Toggle = HacksTab:CreateToggle({
 })
 
 -- Teleport Tab
+-- Teleport
 local SelectedPlayer = nil
-local TweenService = game:GetService("TweenService")
 
 local function getPlayerList()
     local players = {}
@@ -300,37 +300,22 @@ local function getPlayerList()
 end
 
 local PlayerDropdown = TeleportTab:CreateDropdown({
-    Name = "Select Player",
+    Name = "Chose player",
     Options = getPlayerList(),
     CurrentOption = nil,
     MultipleOptions = false,
     Flag = "PlayerDropdown1",
     Callback = function(Option)
-        SelectedPlayer = Option[1]
+        SelectedPlayer = Option[1]  -- Сохраняем выбранного игрока
     end,
 })
 
 local RefreshButton = TeleportTab:CreateButton({
-    Name = "Refresh List",
+    Name = "Refresh list",
     Callback = function()
         PlayerDropdown:SetOptions(getPlayerList())
     end,
 })
-
-local function teleportToPlayer(targetPlayerName)
-    local localPlayer = game.Players.LocalPlayer
-    local targetPlayer = game.Players:FindFirstChild(targetPlayerName)
-
-    if targetPlayer and targetPlayer.Character and targetPlayer.Character:FindFirstChild("HumanoidRootPart") then
-        local hrp = localPlayer.Character and localPlayer.Character:FindFirstChild("HumanoidRootPart")
-        if hrp then
-            local goal = {CFrame = targetPlayer.Character.HumanoidRootPart.CFrame + Vector3.new(0, 2, 0)}
-            local tweenInfo = TweenInfo.new(1, Enum.EasingStyle.Linear, Enum.EasingDirection.Out)
-            local tween = TweenService:Create(hrp, tweenInfo, goal)
-            tween:Play()
-        end
-    end
-end
 
 local TeleportButton = TeleportTab:CreateButton({
     Name = "Teleport",
