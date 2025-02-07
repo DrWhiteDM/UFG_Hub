@@ -306,8 +306,10 @@ local PlayerDropdown = TeleportTab:CreateDropdown({
     MultipleOptions = false,
     Flag = "PlayerDropdown1",
     Callback = function(Option)
-        if Option and #Option > 0 then
-            SelectedPlayer = Option[1] -- Ensure a valid selection
+        if type(Option) == "table" and #Option > 0 then
+            SelectedPlayer = Option[1]
+        else
+            SelectedPlayer = nil
         end
     end,
 })
