@@ -302,18 +302,22 @@ end
 local PlayerDropdown = TeleportTab:CreateDropdown({
     Name = "Chose player",
     Options = getPlayerList(),
-    CurrentOption = nil,
+    CurrentOption = getPlayerList()[1] or nil,
     MultipleOptions = false,
     Flag = "PlayerDropdown1",
     Callback = function(Option)
-        SelectedPlayer = Option[1]  -- Сохраняем выбранного игрока
+        SelectedPlayer = Option
     end,
 })
 
 local RefreshButton = TeleportTab:CreateButton({
     Name = "Refresh list",
     Callback = function()
-        PlayerDropdown:SetOptions(getPlayerList())
+        local newList = getPlayerList()
+        PlayerDropdown:ClearOptions() 
+        for _, player in ipairs(newList) do
+            PlayerDropdown:AddOption(player)
+        end
     end,
 })
 
