@@ -1,0 +1,195 @@
+local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
+
+local Window = Rayfield:CreateWindow({
+   Name = "ufg hub",
+   Icon = 0,
+   LoadingTitle = "ufg hub",
+   LoadingSubtitle = "by DrWhite & wellof",
+   Theme = "Default",
+   ConfigurationSaving = {
+      Enabled = false,
+      FolderName = nil,
+      FileName = "Big Hub"
+   },
+   Discord = {
+      Enabled = false,
+      Invite = "noinvitelink",
+      RememberJoins = true
+   },
+   KeySystem = false,
+   KeySettings = {
+      Title = "Untitled",
+      Subtitle = "Key System",
+      Note = "No method of obtaining the key is provided",
+      FileName = "Key",
+      SaveKey = true,
+      GrabKeyFromSite = false,
+      Key = {"Hello"}
+   }
+})
+
+-- Tabs
+local HacksTab = Window:CreateTab("Hacks", 4483362458)
+local VisualTab = Window:CreateTab("Visual", 4483362458)
+local KeybindsTab = Window:CreateTab("Keybinds", 4483362458)
+local InvisibleTab = Window:CreateTab("Invisible", 4483362458)
+
+-- Keybinds
+-- Pallet Keybind
+local PalletKeybind = InvisibleTab:CreateKeybind({
+   Name = "Pallet Spawn",
+   CurrentKeybind = "G",
+   HoldToInteract = false,
+   Flag = "PalletKeybind1", -- Unique flag for Pallet keybind
+   Callback = function(Keybind)
+      local args = {
+         [1] = "BrownDoska"
+      }
+      game:GetService("ReplicatedStorage").Spawn:InvokeServer(unpack(args))
+   end,
+})
+
+-- Speedy Potion Keybind
+local SpeedyPotionKeybind = InvisibleTab:CreateKeybind({
+   Name = "Speedy Potion Keybind",
+   CurrentKeybind = "C",
+   HoldToInteract = false,
+   Flag = "SpeedyPotionKeybind1", -- Unique flag for Speedy Potion keybind
+   Callback = function(Keybind)
+      local args = {
+         [1] = "Speedy Potion"
+      }
+      game:GetService("ReplicatedStorage").Spawn:InvokeServer(unpack(args))
+   end,
+})
+
+-- AntiG Potion Keybind
+local AntiGPotionKeybind = InvisibleTab:CreateKeybind({
+   Name = "AntiG Potion",
+   CurrentKeybind = "V",
+   HoldToInteract = false,
+   Flag = "AntiGPotionKeybind1", -- Unique flag for AntiG Potion keybind
+   Callback = function(Keybind)
+      local args = {
+         [1] = "AntiG Potion"
+      }
+      game:GetService("ReplicatedStorage").Spawn:InvokeServer(unpack(args))
+   end,
+})
+
+-- Large Potion Keybind
+local LargePotionKeybind = InvisibleTab:CreateKeybind({
+   Name = "Large Potion",
+   CurrentKeybind = "Z",
+   HoldToInteract = false,
+   Flag = "LargePotionKeybind1", -- Unique flag for Large Potion keybind
+   Callback = function(Keybind)
+      local args = {
+         [1] = "Large Potion"
+      }
+      game:GetService("ReplicatedStorage").Spawn:InvokeServer(unpack(args))
+   end,
+})
+
+-- Small Potion Keybind
+local SmallPotionKeybind = InvisibleTab:CreateKeybind({
+   Name = "Small Potion",
+   CurrentKeybind = "X",
+   HoldToInteract = false,
+   Flag = "SmallPotionKeybind1", -- Unique flag for Small Potion keybind
+   Callback = function(Keybind)
+      local args = {
+         [1] = "Small Potion"
+      }
+      game:GetService("ReplicatedStorage").Spawn:InvokeServer(unpack(args))
+   end,
+})
+
+-- Input fields
+-- Pallet Keybind Input
+local PalletKeybindInput = KeybindsTab:CreateInput({
+   Name = "Pallet",
+   CurrentValue = "G",
+   PlaceholderText = "Enter new key",
+   RemoveTextAfterFocusLost = false,
+   Flag = "PalletInputKeybind1", -- Unique flag for Pallet keybind input
+   Callback = function(Text)
+      PalletKeybind:Set(Text)
+   end,
+})
+
+-- Speedy Potion Keybind Input
+local SpeedyPotionKeybindInput = KeybindsTab:CreateInput({
+   Name = "Speedy Potion",
+   CurrentValue = "C",
+   PlaceholderText = "Enter new key",
+   RemoveTextAfterFocusLost = false,
+   Flag = "SpeedyPotionInputKeybind1", -- Unique flag for Speedy Potion keybind input
+   Callback = function(Text)
+      SpeedyPotionKeybind:Set(Text)
+   end,
+})
+
+-- AntiG Potion Keybind Input
+local AntiGPotionKeybindInput = KeybindsTab:CreateInput({
+   Name = "AntiG Potion",
+   CurrentValue = "V",
+   PlaceholderText = "Enter new key",
+   RemoveTextAfterFocusLost = false,
+   Flag = "AntiGPotionInputKeybind1", -- Unique flag for AntiG Potion keybind input
+   Callback = function(Text)
+      AntiGPotionKeybind:Set(Text)
+   end,
+})
+
+-- Large Potion Keybind Input
+local LargePotionKeybindInput = KeybindsTab:CreateInput({
+   Name = "Large Potion",
+   CurrentValue = "Z",
+   PlaceholderText = "Enter new key",
+   RemoveTextAfterFocusLost = false,
+   Flag = "LargePotionInputKeybind1", -- Unique flag for Large Potion keybind input
+   Callback = function(Text)
+      LargePotionKeybind:Set(Text)
+   end,
+})
+
+-- Small Potion Keybind Input
+local SmallPotionKeybindInput = KeybindsTab:CreateInput({
+   Name = "Small Potion",
+   CurrentValue = "X",
+   PlaceholderText = "Enter new key",
+   RemoveTextAfterFocusLost = false,
+   Flag = "SmallPotionInputKeybind1", -- Unique flag for Small Potion keybind input
+   Callback = function(Text)
+      SmallPotionKeybind:Set(Text)
+   end,
+})
+
+-- Visual
+-- Skins
+local SkinDropdown = VisualTab:CreateDropdown({
+   Name = "Skin Lines",
+   Options = {"Default", "Gravity", "Frozen"},
+   CurrentOption = "Default",
+   MultipleOptions = false,
+   Flag = "Dropdown1",
+   Callback = function(Options)
+      game.Players.LocalPlayer:SetAttribute("Skin", Options[1])
+   end,
+})
+
+-- Gems
+local GemInput = VisualTab:CreateInput({
+   Name = "Set Gems",
+   CurrentValue = "",
+   PlaceholderText = "Enter number",
+   RemoveTextAfterFocusLost = false,
+   Flag = "Input1",
+   Callback = function(Text)
+      local numberValue = tonumber(Text)
+      if numberValue then
+         game.Players.LocalPlayer:SetAttribute("Rupees", numberValue)
+      end
+   end,
+})
