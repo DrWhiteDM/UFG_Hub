@@ -63,7 +63,7 @@ local PalletKeybindInput = KeybindsTab:CreateInput({
    RemoveTextAfterFocusLost = false,
    Flag = "InputKeybind1",
    Callback = function(Text)
-      PalletKeybind:Set(Text)
+      PalletKeybind:Set(Text:upper())
    end,
 })
 
@@ -90,7 +90,7 @@ local SpeedyPotionKeybindInput = KeybindsTab:CreateInput({
    RemoveTextAfterFocusLost = false,
    Flag = "InputKeybind1",
    Callback = function(Text)
-      SpeedyPotionKeybind:Set(Text)
+      SpeedyPotionKeybind:Set(Text:upper())
    end,
 })
 
