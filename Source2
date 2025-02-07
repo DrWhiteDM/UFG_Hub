@@ -322,12 +322,12 @@ createPlayerDropdown()
 local RefreshButton = TeleportTab:CreateButton({
     Name = "Refresh list",
     Callback = function()
-        local players = getPlayerList()
-        if #players > 0 then
-            PlayerDropdown:SetOptions(players)
-        else
-            PlayerDropdown:SetOptions({"No players found"})
+        print("Refreshing list...")
+        local playerList = getPlayerList()
+        for _, v in pairs(playerList) do
+            print(v)
         end
+        createPlayerDropdown()
     end,
 })
 
