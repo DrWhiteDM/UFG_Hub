@@ -123,7 +123,7 @@ local SkinDropdown = VisualTab:CreateDropdown({
    MultipleOptions = false,
    Flag = "Dropdown1", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
    Callback = function(Options)
-      game.Players.LocalPlayer:SetAttribute("Skin", Options) -- The function that takes place when the selected option is changed
+      game.Players.LocalPlayer:SetAttribute("Skin", Option) -- The function that takes place when the selected option is changed
    -- The variable (Options) is a table of strings for the current selected options
    end,
 })
