@@ -283,3 +283,53 @@ local InfiniteJump_Toggle = HacksTab:CreateToggle({
         toggleInfiniteJump(Value)
     end,
 })
+
+-- Teleport Tab
+-- Teleport
+local SelectedPlayer = nil
+
+local function getPlayerList()
+    local players = {}
+    for _, player in pairs(game:GetService("Players"):GetPlayers()) do
+        if player ~= game.Players.LocalPlayer then
+            table.insert(players, player.Name)
+        end
+    end
+    return players
+end
+
+local PlayerDropdown = TeleportTab:CreateDropdown({
+    Name = "Выберите игрока",
+    Options = getPlayerList(),
+    CurrentOption = nil,
+    MultipleOptions = false,
+    Flag = "PlayerDropdown",
+    Callback = function(Option)
+        SelectedPlayer = Option[1]  -- Сохраняем выбранного игрока
+    end,
+})
+
+local RefreshButton = TeleportTab:CreateButton({
+    Name = "Обновить список",
+    Callback = function()
+        PlayerDropdown:SetOptions(getPlayerList())
+    end,
+})
+
+local function teleportToPlayer(targetPlayerName)
+    local localPlayer = game.Players.LocalPlayer
+    local targetPlayer = game.Players:FindFirstChild(targetPlayerName)
+
+    if targetPlayer and targetPlayer.Character and targetPlayer.Character:FindFirstChild("HumanoidRootPart") then
+        localPlayer.Character:MoveTo(targetPlayer.Character.HumanoidRootPart.Position)
+    end
+end
+
+local TeleportButton = TeleportTab:CreateButton({
+    Name = "Teleport",
+    Callback = function()
+        if SelectedPlayer then
+            teleportToPlayer(SelectedPlayer)
+        end
+    end,
+})
