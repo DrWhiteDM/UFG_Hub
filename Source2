@@ -246,7 +246,6 @@ Players.PlayerAdded:Connect(function(player)
     end)
 end)
 
--- Добавляем ESP Toggle в HacksTab
 local Toggle = HacksTab:CreateToggle({
     Name = "ESP",
     CurrentValue = false,
@@ -254,5 +253,33 @@ local Toggle = HacksTab:CreateToggle({
  "ESPToggle1",
     Callback = function(Value)
         toggleESP(Value)
+    end,
+})
+
+-- Infinite Jump
+local UserInputService = game:GetService("UserInputService")
+local InfiniteJumpEnabled = false
+
+local function toggleInfiniteJump(enable)
+    InfiniteJumpEnabled = enable
+
+    if enable then
+        game:GetService("UserInputService").JumpRequest:Connect(function()
+            if InfiniteJumpEnabled then
+                local player = game:GetService("Players").LocalPlayer
+                if player.Character and player.Character:FindFirstChildOfClass("Humanoid") then
+                    player.Character:FindFirstChildOfClass("Humanoid"):ChangeState(Enum.HumanoidStateType.Jumping)
+                end
+            end
+        end)
+    end
+end
+
+local InfiniteJump_Toggle = HacksTab:CreateToggle({
+    Name = "Infinite Jump",
+    CurrentValue = false,
+    Flag = "InfiniteJumpToggle1",
+    Callback = function(Value)
+        toggleInfiniteJump(Value)
     end,
 })
