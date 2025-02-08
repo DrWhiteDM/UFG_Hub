@@ -330,8 +330,7 @@ local TeleportButton = TeleportTab:CreateButton({
     Name = "Teleport",
     Callback = function()
         if SelectedPlayer then
-            teleportToPla
-yer(SelectedPlayer)
+            teleportToPlayer(SelectedPlayer)
         end
     end,
 })
