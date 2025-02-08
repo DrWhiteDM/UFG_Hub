@@ -348,12 +348,16 @@ local TeleportButton = TeleportTab:CreateButton({
 
 -- Teleport to GemBoxes
 local SelectedGembox = nil
+local GemboxLookup = {} -- Храним реальные объекты
 
 local function getGemboxList()
     local gemboxes = {}
-    for i, box in pairs(game.Workspace.GemBoxes:GetChildren()) do
+    GemboxLookup = {} -- Очищаем таблицу перед обновлением
+
+    for _, box in pairs(game.Workspace.GemBoxes:GetChildren()) do
         if box:IsA("Model") then
-            table.insert(gemboxes, box.Name .. " [" .. i .. "]")
+            table.insert(gemboxes, box.Name)
+            table.insert(GemboxLookup, box) -- Запоминаем объект
         end
     end
     return gemboxes
@@ -365,12 +369,9 @@ local GemboxDropdown = TeleportTab:CreateDropdown({
     CurrentOption = nil,
     Flag = "GemboxDropdown1",
     Callback = function(Option)
-        local gemboxes = game.Workspace.GemBoxes:GetChildren()
-        for _, box in pairs(gemboxes) do
-            if Option[1] == box.Name .. " [" .. table.find(gemboxes, box) .. "]" then
-                SelectedGembox = box
-                break
-            end
+        local index = table.find(getGemboxList(), Option[1])
+        if index then
+            SelectedGembox = GemboxLookup[index] -- Выбираем объект по индексу
         end
     end,
 })
@@ -411,7 +412,6 @@ local TeleportGemboxButton = TeleportTab:CreateButton({
     end,
 })
 
--- Notification
 -- Notification when a new Gembox appears
 game.Workspace.GemBoxes.ChildAdded:Connect(function(child)
     if child:IsA("Model") then
@@ -423,6 +423,14 @@ game.Workspace.GemBoxes.ChildAdded:Connect(function(child)
         })
         GemboxDropdown:Refresh(getGemboxList(), false)
     end
+end)
+
+-- Handle Gembox removal
+game.Workspace.GemBoxes.ChildRemoved:Connect(function(child)
+    if child == SelectedGembox then
+        SelectedGembox = nil
+    end
+    GemboxDropdown:Refresh(getGemboxList(), false)
 end)
 
 -- Notification if Gemboxes already exist on the server
