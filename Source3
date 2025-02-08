@@ -1,0 +1,179 @@
+local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
+
+local Window = Rayfield:CreateWindow({
+   Name = "Untitled Fling Game Hub",
+   Icon = 0,
+   LoadingTitle = "Untitled Fling Game Hub",
+   LoadingSubtitle = "by DrWhite & wellof",
+   Theme = "Default",
+   ConfigurationSaving = {
+      Enabled = false,
+      FolderName = nil,
+      FileName = "Untitled Fling Game Hub"
+   },
+   Discord = {
+      Enabled = false,
+      Invite = "noinvitelink",
+      RememberJoins = true
+   },
+   KeySystem = false,
+})
+
+-- Tabs
+local HacksTab = Window:CreateTab("Hacks", 4483362458)
+local VisualTab = Window:CreateTab("Visual", 4483362458)
+local KeybindsTab = Window:CreateTab("Keybinds", 4483362458)
+local TeleportTab = Window:CreateTab("Teleport", 4483362458)
+local InvisibleTab = Window:CreateTab("Invisible", 4483362458)
+
+-- Keybinds
+local function createKeybind(name, key, flag, itemName)
+   return InvisibleTab:CreateKeybind({
+      Name = name,
+      CurrentKeybind = key,
+      HoldToInteract = false,
+      Flag = flag,
+      Callback = function()
+         game:GetService("ReplicatedStorage").Spawn:InvokeServer(itemName)
+      end,
+   })
+end
+
+local PalletKeybind = createKeybind("Pallet Spawn", "G", "PalletKeybind1", "BrownDoska")
+local SpeedyPotionKeybind = createKeybind("Speedy Potion", "C", "SpeedyPotionKeybind1", "Speedy Potion")
+local AntiGPotionKeybind = createKeybind("AntiG Potion", "V", "AntiGPotionKeybind1", "AntiG Potion")
+local LargePotionKeybind = createKeybind("Large Potion", "Z", "LargePotionKeybind1", "Large Potion")
+local SmallPotionKeybind = createKeybind("Small Potion", "X", "SmallPotionKeybind1", "Small Potion")
+
+-- Keybind Input
+local function createKeybindInput(name, defaultKey, flag, keybind)
+   return KeybindsTab:CreateInput({
+      Name = name,
+      CurrentValue = defaultKey,
+      PlaceholderText = "Enter new key",
+      RemoveTextAfterFocusLost = false,
+      Flag = flag,
+      Callback = function(Text)
+         if type(Text) == "string" and Text:match("^[A-Za-z0-9]$") then
+            keybind.CurrentKeybind = string.upper(Text)
+         end
+      end,
+   })
+end
+
+createKeybindInput("Pallet", "G", "PalletInputKeybind1", PalletKeybind)
+createKeybindInput("Speedy Potion", "C", "SpeedyPotionInputKeybind1", SpeedyPotionKeybind)
+createKeybindInput("AntiG Potion", "V", "AntiGPotionInputKeybind1", AntiGPotionKeybind)
+createKeybindInput("Large Potion", "Z", "LargePotionInputKeybind1", LargePotionKeybind)
+createKeybindInput("Small Potion", "X", "SmallPotionInputKeybind1", SmallPotionKeybind)
+
+-- ESP System
+local Players = game:GetService("Players")
+local LocalPlayer = Players.LocalPlayer
+local ESP_Enabled = false
+
+local function toggleESP(enable)
+   ESP_Enabled = enable
+   for _, player in pairs(Players:GetPlayers()) do
+      if player ~= LocalPlayer then
+         local character = player.Character
+         if character then
+            local highlight = character:FindFirstChild("ESP_Highlight")
+            if enable then
+               if not highlight then
+                  highlight = Instance.new("Highlight")
+                  highlight.Name = "ESP_Highlight"
+                  highlight.Parent = character
+                  highlight.FillColor = Color3.fromRGB(255, 0, 0)
+                  highlight.OutlineColor = Color3.fromRGB(255, 255, 255)
+                  highlight.FillTransparency = 0.5
+                  highlight.OutlineTransparency = 0
+               end
+            else
+               if highlight then highlight:Destroy() end
+            end
+         end
+      end
+   end
+end
+
+Players.PlayerAdded:Connect(function(player)
+   player.CharacterAdded:Connect(function()
+      if ESP_Enabled then toggleESP(true) end
+   end)
+end)
+
+HacksTab:CreateToggle({
+   Name = "ESP",
+   CurrentValue = false,
+   Flag = "ESPToggle1",
+   Callback = toggleESP,
+})
+
+-- Infinite Jump
+local InfiniteJumpEnabled = false
+
+game:GetService("UserInputService").JumpRequest:Connect(function()
+   if InfiniteJumpEnabled then
+      local humanoid = LocalPlayer.Character and LocalPlayer.Character:FindFirstChildOfClass("Humanoid")
+      if humanoid then
+         humanoid:ChangeState(Enum.HumanoidStateType.Jumping)
+      end
+   end
+end)
+
+HacksTab:CreateToggle({
+   Name = "Infinite Jump",
+   CurrentValue = false,
+   Flag = "InfiniteJumpToggle1",
+   Callback = function(Value)
+      InfiniteJumpEnabled = Value
+   end,
+})
+
+-- Teleport
+local SelectedPlayer
+
+local function getPlayerList()
+   local players = {}
+   for _, player in pairs(Players:GetPlayers()) do
+      if player ~= LocalPlayer then
+         table.insert(players, player.Name)
+      end
+   end
+   return players
+end
+
+local PlayerDropdown = TeleportTab:CreateDropdown({
+   Name = "Choose player",
+   Options = getPlayerList(),
+   CurrentOption = nil,
+   MultipleOptions = false,
+   Flag = "PlayerDropdown1",
+   Callback = function(Option)
+      SelectedPlayer = Option[1]
+   end,
+})
+
+TeleportTab:CreateButton({
+   Name = "Refresh list",
+   Callback = function()
+      PlayerDropdown:SetOptions(getPlayerList())
+   end,
+})
+
+local function teleportToPlayer(targetPlayerName)
+   local targetPlayer = Players:FindFirstChild(targetPlayerName)
+   if targetPlayer and targetPlayer.Character and targetPlayer.Character:FindFirstChild("HumanoidRootPart") then
+      LocalPlayer.Character:MoveTo(targetPlayer.Character.HumanoidRootPart.Position)
+   end
+end
+
+TeleportTab:CreateButton({
+   Name = "Teleport",
+   Callback = function()
+      if SelectedPlayer then
+         teleportToPlayer(SelectedPlayer)
+      end
+   end,
+})
