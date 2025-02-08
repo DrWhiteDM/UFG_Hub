@@ -348,20 +348,15 @@ local TeleportButton = TeleportTab:CreateButton({
 
 -- Teleport to GemBoxes
 local SelectedGembox = nil
-local GemboxList = {}
 
 local function getGemboxList()
-    local gemboxNames = {}
-    GemboxList = {}
-
+    local gemboxes = {}
     for _, box in pairs(game.Workspace.GemBoxes:GetChildren()) do
         if box:IsA("Model") then
-            table.insert(GemboxList, box) -- Храним объект
-            table.insert(gemboxNames, box.Name .. " [" .. #GemboxList .. "]") -- Добавляем индекс
+            table.insert(gemboxes, box.Name)
         end
     end
-
-    return gemboxNames
+    return gemboxes
 end
 
 local GemboxDropdown = TeleportTab:CreateDropdown({
@@ -370,20 +365,7 @@ local GemboxDropdown = TeleportTab:CreateDropdown({
     CurrentOption = nil,
     Flag = "GemboxDropdown1",
     Callback = function(Option)
-        -- Добавляем отладку
-        print("Option received:", Option)
-        if typeof(Option) == "table" then
-            Option = Option[1] -- Берём первый элемент, если это таблица
-        end
-
-        local index = tonumber(string.match(Option, "%[(%d+)%]")) -- Извлекаем индекс
-        if index and GemboxList[index] then
-            SelectedGembox = GemboxList[index]
-            print("Selected Gembox:", SelectedGembox)
-        else
-            SelectedGembox = nil
-            print("Gembox selection failed!")
-        end
+        SelectedGembox = game.Workspace.GemBoxes:FindFirstChild(Option[1]) or nil
     end,
 })
 
@@ -418,7 +400,8 @@ local TeleportGemboxButton = TeleportTab:CreateButton({
                 Duration = 3,
                 Image = 4483362458,
             })
-            GemboxDropdown:Refresh(getGemboxList(), false)
+            GemboxDropdown:Re
+fresh(getGemboxList(), false)
         end
     end,
 })
