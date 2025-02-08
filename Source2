@@ -352,12 +352,12 @@ local GemboxList = {}
 
 local function getGemboxList()
     local gemboxNames = {}
-    GemboxList = {} -- Очищаем список перед обновлением
+    GemboxList = {}
 
     for _, box in pairs(game.Workspace.GemBoxes:GetChildren()) do
         if box:IsA("Model") then
-            table.insert(GemboxList, box) -- Храним сам объект
-            table.insert(gemboxNames, box.Name .. " [" .. #GemboxList .. "]") -- Добавляем индекс в название
+            table.insert(GemboxList, box) -- Храним объект
+            table.insert(gemboxNames, box.Name .. " [" .. #GemboxList .. "]") -- Добавляем индекс
         end
     end
 
@@ -370,11 +370,19 @@ local GemboxDropdown = TeleportTab:CreateDropdown({
     CurrentOption = nil,
     Flag = "GemboxDropdown1",
     Callback = function(Option)
-        local index = tonumber(Option:match("%[(%d+)%]")) -- Извлекаем индекс из названия
+        -- Добавляем отладку
+        print("Option received:", Option)
+        if typeof(Option) == "table" then
+            Option = Option[1] -- Берём первый элемент, если это таблица
+        end
+
+        local index = tonumber(string.match(Option, "%[(%d+)%]")) -- Извлекаем индекс
         if index and GemboxList[index] then
             SelectedGembox = GemboxList[index]
+            print("Selected Gembox:", SelectedGembox)
         else
             SelectedGembox = nil
+            print("Gembox selection failed!")
         end
     end,
 })
