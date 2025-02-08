@@ -414,6 +414,20 @@ local TeleportGemboxButton = TeleportTab:CreateButton({
     end,
 })
 
+-- Notification
+-- Notification when a new Gembox appears
+game.Workspace.GemBoxes.ChildAdded:Connect(function(child)
+    if child:IsA("Model") then
+        Rayfield:Notify({
+            Title = "New Gembox!",
+            Content = "A new Gembox has appeared!",
+            Duration = 5,
+            Image = 4483362458,
+        })
+        GemboxDropdown:Refresh(getGemboxList(), false)
+    end
+end)
+
 -- Notification if Gemboxes already exist on the server
 local function checkExistingGemboxes()
     local gemboxCount = #game.Workspace.GemBoxes:GetChildren()
