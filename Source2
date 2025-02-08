@@ -400,8 +400,7 @@ local TeleportGemboxButton = TeleportTab:CreateButton({
                 Duration = 3,
                 Image = 4483362458,
             })
-            GemboxDropdown:Re
-fresh(getGemboxList(), false)
+            GemboxDropdown:Refresh(getGemboxList(), false)
         end
     end,
 })
