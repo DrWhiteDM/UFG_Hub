@@ -373,6 +373,7 @@ local GemboxDropdown = TeleportTab:CreateDropdown({
     CurrentOption = nil,
     Flag = "GemboxDropdown1",
     Callback = function(Option)
+        -- Find the exact gembox by name and index
         for _, box in pairs(getGemboxList()) do
             if box.Name == Option[1] then
                 SelectedGembox = box
@@ -414,13 +415,7 @@ local TeleportGemboxButton = TeleportTab:CreateButton({
     end,
 })
 
-game.Workspace.GemBoxes.ChildAdded:Connect(updateGemboxDropdown)
-game.Workspace.GemBoxes.ChildRemoved:Connect(updateGemboxDropdown)
-
-updateGemboxDropdown()
-
--- Notification
--- Notification when a new Gembox appears
+-- Auto-update gembox list when objects change
 game.Workspace.GemBoxes.ChildAdded:Connect(function(child)
     if child:IsA("Model") then
         Rayfield:Notify({
@@ -429,11 +424,13 @@ game.Workspace.GemBoxes.ChildAdded:Connect(function(child)
             Duration = 5,
             Image = 4483362458,
         })
-        GemboxDropdown:Refresh(getGemboxList(), false)
+        updateGemboxDropdown()
     end
 end)
 
--- Notification if Gemboxes already exist on the server
+game.Workspace.GemBoxes.ChildRemoved:Connect(updateGemboxDropdown)
+
+-- Check for existing gemboxes on startup
 local function checkExistingGemboxes()
     local gemboxCount = #game.Workspace.GemBoxes:GetChildren()
     if gemboxCount > 0 then
@@ -444,7 +441,7 @@ local function checkExistingGemboxes()
             Image = 4483362458,
         })
     end
-    GemboxDropdown:Refresh(getGemboxList(), false)
+    updateGemboxDropdown()
 end
 
 checkExistingGemboxes()
