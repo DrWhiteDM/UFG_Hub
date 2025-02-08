@@ -287,78 +287,42 @@ local InfiniteJump_Toggle = HacksTab:CreateToggle({
 
 -- Teleport Tab
 -- Teleport
--- Teleport Tab
-local SelectedPlayer = nil
+local selectedPlayer
 
--- Функция для получения списка игроков
-local function getPlayerList()
-    local players = {}
-    for _, player in pairs(game:GetService("Players"):GetPlayers()) do
-        if player ~= game.Players.LocalPlayer then
-            table.insert(players, player.Name)
-        end
-    end
-    return players
-end
-
--- Создание Dropdown для выбора игрока
 local PlayerDropdown = TeleportTab:CreateDropdown({
-    Name = "Choose player",
-    Options = getPlayerList(),
-    CurrentOption = nil,
-    MultipleOptions = false,
-    Flag = "PlayerDropdown1",
-    Callback = function(Option)
-        SelectedPlayer = Option[1]
-        print("Selected player:", SelectedPlayer) -- Для отладки
-    end,
-})
-
--- Кнопка для обновления списка игроков
-local RefreshButton = TeleportTab:CreateButton({
-    Name = "Refresh list",
-    Callback = function()
-        -- Удаляем старый Dropdown
-        PlayerDropdown:Destroy()
-
-        -- Создаем новый Dropdown с обновленным списком
-        PlayerDropdown = TeleportTab:CreateDropdown({
-            Name = "Choose player",
-            Options = getPlayerList(),
-            CurrentOption = nil,
-            MultipleOptions = false,
-            Flag = "PlayerDropdown1",
-            Callback = function(Option)
-                SelectedPlayer = Option[1]
-                print("Selected player:", SelectedPlayer) -- Для отладки
-            end,
-        })
-
-        print("Player list refreshed") -- Для отладки
-    end,
-})
-
--- Функция для телепортации к выбранному игроку
-local function teleportToPlayer(targetPlayerName)
-    local localPlayer = game.Players.LocalPlayer
-    local targetPlayer = game.Players:FindFirstChild(targetPlayerName)
-
-    if targetPlayer and targetPlayer.Character and targetPlayer.Character:FindFirstChild("HumanoidRootPart") then
-        localPlayer.Character:MoveTo(targetPlayer.Character.HumanoidRootPart.Position)
-        print("Teleported to:", targetPlayerName) -- Для отладки
-    else
-        warn("Target player not found or their character is missing!")
+    Name = "Select a Player",
+    Options = {},
+    Callback = function(Value)
+        selectedPlayer = Value
     end
+})
+
+local function UpdatePlayerList()
+    local players = {}
+    for _, player in ipairs(game.Players:GetPlayers()) do
+        table.insert(players, player.Name)
+    end
+    PlayerDropdown:Refresh(players)
 end
 
--- Кнопка для телепортации
-local TeleportButton = TeleportTab:CreateButton({
+TeleportTab:CreateButton({
+    Name = "Refresh List",
+    Callback = function()
+        UpdatePlayerList()
+    end
+})
+
+TeleportTab:CreateButton({
     Name = "Teleport",
     Callback = function()
-        if SelectedPlayer then
-            teleportToPlayer(SelectedPlayer)
-        else
-            warn("No player selected!")
+        if selectedPlayer then
+            local player = game.Players:FindFirstChild(selectedPlayer)
+            if player and player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
+                game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame =
+                    player.Character.HumanoidRootPart.CFrame + Vector3.new(0, 3, 0)
+            end
         end
-    end,
+    end
 })
+
+UpdatePlayerList()
