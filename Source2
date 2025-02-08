@@ -348,12 +348,16 @@ local TeleportButton = TeleportTab:CreateButton({
 
 -- Teleport to GemBoxes
 local SelectedGembox = nil
+local GemboxIndexMap = {}
 
 local function getGemboxList()
     local gemboxes = {}
+    GemboxIndexMap = {}  -- Обнуляем перед обновлением списка
+
     for i, box in pairs(game.Workspace.GemBoxes:GetChildren()) do
         if box:IsA("Model") then
-            table.insert(gemboxes, box.Name .. " [" .. i .. "]")
+            table.insert(gemboxes, box.Name)  -- Добавляем только имя в список отображения
+            GemboxIndexMap[box.Name .. " [" .. i .. "]"] = box  -- Сохраняем индекс скрыто
         end
     end
     return gemboxes
@@ -365,9 +369,8 @@ local GemboxDropdown = TeleportTab:CreateDropdown({
     CurrentOption = nil,
     Flag = "GemboxDropdown1",
     Callback = function(Option)
-        local gemboxes = game.Workspace.GemBoxes:GetChildren()
-        for _, box in pairs(gemboxes) do
-            if Option[1] == box.Name .. " [" .. table.find(gemboxes, box) .. "]" then
+        for indexedName, box in pairs(GemboxIndexMap) do
+            if indexedName:match("^" .. Option[1]) then  -- Проверяем совпадение имени
                 SelectedGembox = box
                 break
             end
@@ -410,20 +413,6 @@ local TeleportGemboxButton = TeleportTab:CreateButton({
         end
     end,
 })
-
--- Notification
--- Notification when a new Gembox appears
-game.Workspace.GemBoxes.ChildAdded:Connect(function(child)
-    if child:IsA("Model") then
-        Rayfield:Notify({
-            Title = "New Gembox!",
-            Content = "A new Gembox has appeared!",
-            Duration = 5,
-            Image = 4483362458,
-        })
-        GemboxDropdown:Refresh(getGemboxList(), false)
-    end
-end)
 
 -- Notification if Gemboxes already exist on the server
 local function checkExistingGemboxes()
