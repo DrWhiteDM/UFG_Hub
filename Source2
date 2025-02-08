@@ -369,7 +369,10 @@ local function teleportToGembox(targetGembox)
     local localPlayer = game.Players.LocalPlayer
     local character = localPlayer.Character
     if character and targetGembox and targetGembox:FindFirstChildOfClass("BasePart") then
-        character:MoveTo(targetGembox:FindFirstChildOfClass("BasePart").Position)
+        local hrp = character:FindFirstChild("HumanoidRootPart")
+        if hrp then
+            hrp.CFrame = targetGembox:FindFirstChildOfClass("BasePart").CFrame + Vector3.new(0, 3, 0) -- Телепорт с небольшим подъёмом
+        end
     end
 end
 
