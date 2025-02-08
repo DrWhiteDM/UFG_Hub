@@ -286,7 +286,7 @@ local InfiniteJump_Toggle = HacksTab:CreateToggle({
 })
 
 -- Teleport Tab
--- Teleport Players
+-- Teleport to Players
 local SelectedPlayer = nil
 
 local function getPlayerList()
@@ -346,10 +346,91 @@ local TeleportButton = TeleportTab:CreateButton({
     end,
 })
 
--- Teleport GemBoxes
+-- Teleport to GemBoxes
+local SelectedGembox = nil
 
+local function getGemboxList()
+    local gemboxes = {}
+    for _, box in pairs(game.Workspace.GemBoxes:GetChildren()) do
+        if box:IsA("Model") then
+            table.insert(gemboxes, box.Name)
+        end
+    end
+    return gemboxes
+end
+
+local GemboxDropdown = TeleportTab:CreateDropdown({
+    Name = "Choose Gembox",
+    Options = getGemboxList(),
+    CurrentOption = nil,
+    Flag = "GemboxDropdown1",
+    Callback = function(Option)
+        SelectedGembox = game.Workspace.GemBoxes:FindFirstChild(Option[1]) or nil
+    end,
+})
+
+local RefreshGemboxButton = TeleportTab:CreateButton({
+    Name = "Refresh Gembox List",
+    Callback = function()
+        GemboxDropdown:Refresh(getGemboxList(), false)
+    end,
+})
+
+local function teleportToGembox(targetGembox)
+    local localPlayer = game.Players.LocalPlayer
+    local character = localPlayer.Character
+    if character and targetGembox then
+        local basePart = targetGembox:FindFirstChildWhichIsA("BasePart", true) -- Находим первую доступную BasePart
+        local hrp = character:FindFirstChild("HumanoidRootPart")
+        if hrp and basePart then
+            hrp.CFrame = basePart.CFrame + Vector3.new(0, 5, 0) -- Телепортируемся немного выше
+        end
+    end
+end
+
+local TeleportGemboxButton = TeleportTab:CreateButton({
+    Name = "Teleport to Gembox",
+    Callback = function()
+        if SelectedGembox and SelectedGembox.Parent then
+            teleportToGembox(SelectedGembox)
+        else
+            Rayfield:Notify({
+                Title = "Error",
+                Content = "The selected Gembox no longer exists!",
+                Duration = 3,
+                Image = 4483362458,
+            })
+            GemboxDropdown:Refresh(getGemboxList(), false)
+        end
+    end,
+})
 
 -- Notification
 -- Notification when a new Gembox appears
+game.Workspace.GemBoxes.ChildAdded:Connect(function(child)
+    if child:IsA("Model") then
+        Rayfield:Notify({
+            Title = "New Gembox!",
+            Content = "A new Gembox has appeared!",
+            Duration = 5,
+            Image = 4483362458,
+        })
+        GemboxDropdown:Refresh(getGemboxList(), false)
+    end
+end)
 
 -- Notification if Gemboxes already exist on the server
+local function checkExistingGemboxes()
+    local gemboxCount = #game.Workspace.GemBoxes:GetChildren()
+    if gemboxCount > 0 then
+        Rayfield:Notify({
+            Title = "Gemboxes Found!",
+            Content = "There are already " .. gemboxCount .. " Gembox(es) in the game!",
+            Duration = 5,
+            Image = 4483362458,
+        })
+    end
+    GemboxDropdown:Refresh(getGemboxList(), false)
+end
+
+checkExistingGemboxes()
