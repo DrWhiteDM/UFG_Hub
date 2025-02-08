@@ -348,14 +348,20 @@ local TeleportButton = TeleportTab:CreateButton({
 
 -- Teleport to GemBoxes
 local SelectedGembox = nil
+local GemboxMap = {}
 
 local function getGemboxList()
     local gemboxes = {}
+    GemboxMap = {}
+
     for _, box in pairs(game.Workspace.GemBoxes:GetChildren()) do
         if box:IsA("Model") then
-            table.insert(gemboxes, box.Name)
+            local uniqueName = box.Name .. "_" .. box:GetDebugId() -- Уникальный ID
+            table.insert(gemboxes, uniqueName)
+            GemboxMap[uniqueName] = box
         end
     end
+
     return gemboxes
 end
 
@@ -365,7 +371,7 @@ local GemboxDropdown = TeleportTab:CreateDropdown({
     CurrentOption = nil,
     Flag = "GemboxDropdown1",
     Callback = function(Option)
-        SelectedGembox = game.Workspace.GemBoxes:FindFirstChild(Option[1]) or nil
+        SelectedGembox = GemboxMap[Option]
     end,
 })
 
