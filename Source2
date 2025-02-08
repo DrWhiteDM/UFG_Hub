@@ -299,31 +299,33 @@ local function getPlayerList()
     return players
 end
 
-local function createPlayerDropdown()
-    return TeleportTab:CreateDropdown({
-        Name = "Chose player",
-        Options = getPlayerList(),
-        CurrentOption = nil,
-        MultipleOptions = false,
-        Flag = "PlayerDropdown1",
-        Callback = function(Option)
-            SelectedPlayer = Option[1]
-        end,
-    })
-end
-
-local PlayerDropdown = createPlayerDropdown()
+local PlayerDropdown = TeleportTab:CreateDropdown({
+    Name = "Chose player",
+    Options = getPlayerList(),
+    CurrentOption = nil,
+    MultipleOptions = false,
+    Flag = "PlayerDropdown1",
+    Callback = function(Option)
+        SelectedPlayer = Option[1]
+    end,
+})
 
 local RefreshButton = TeleportTab:CreateButton({
     Name = "Refresh list",
     Callback = function()
-        local Parent = PlayerDropdown.Parent
-        local Order = PlayerDropdown.Order
+        local NewOptions = getPlayerList()
 
-        PlayerDropdown:Destroy()
-        PlayerDropdown = createPlayerDropdown()
-        PlayerDropdown.Parent = Parent
-        PlayerDropdown.Order = Order
+        for i = #PlayerDropdown.Options, 1, -1 do
+            table.remove(PlayerDropdown.Options, i)
+        end
+
+        for _, player in ipairs(NewOptions) do
+            table.insert(PlayerDropdown.Options, player)
+        end
+
+        if PlayerDropdown.Refresh then
+            PlayerDropdown:Refresh()
+        end
     end,
 })
 
