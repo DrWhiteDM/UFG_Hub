@@ -330,8 +330,18 @@ end
 local TeleportButton = TeleportTab:CreateButton({
     Name = "Teleport to Player",
     Callback = function()
-        if SelectedPlayer then
+        local targetPlayer = game.Players:FindFirstChild(SelectedPlayer)
+
+        if targetPlayer and targetPlayer.Character and targetPlayer.Character:FindFirstChild("HumanoidRootPart") then
             teleportToPlayer(SelectedPlayer)
+        else
+            Rayfield:Notify({
+                Title = "Error",
+                Content = "The selected player is no longer available!",
+                Duration = 3,
+                Image = 4483362458,
+            })
+            PlayerDropdown:Refresh(getPlayerList(), false)
         end
     end,
 })
