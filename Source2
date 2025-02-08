@@ -288,7 +288,6 @@ local InfiniteJump_Toggle = HacksTab:CreateToggle({
 -- Teleport Tab
 -- Teleport
 local SelectedPlayer = nil
-local PlayerDropdown
 
 local function getPlayerList()
     local players = {}
@@ -300,31 +299,21 @@ local function getPlayerList()
     return players
 end
 
-local function createPlayerDropdown()
-    PlayerDropdown = TeleportTab:CreateDropdown({
-        Name = "Chose player",
-        Options = getPlayerList(),
-        CurrentOption = nil,
-        MultipleOptions = false,
-        Flag = "PlayerDropdown1",
-        Callback = function(Option)
-            SelectedPlayer = Option[1]
-        end,
-    })
-end
-
-createPlayerDropdown()
+local PlayerDropdown = TeleportTab:CreateDropdown({
+    Name = "Chose player",
+    Options = getPlayerList(),
+    CurrentOption = nil,
+    MultipleOptions = false,
+    Flag = "PlayerDropdown1",
+    Callback = function(Option)
+        SelectedPlayer = Option[1]
+    end,
+})
 
 local RefreshButton = TeleportTab:CreateButton({
     Name = "Refresh list",
     Callback = function()
-        local NewOptions = getPlayerList()
-
-        if PlayerDropdown and typeof(PlayerDropdown.SetOptions) == "function" then
-            PlayerDropdown:SetOptions(NewOptions)
-        else
-            warn("Rayfield не поддерживает динамическое обновление списка!")
-        end
+        PlayerDropdown:SetOptions(getPlayerList())
     end,
 })
 
@@ -341,7 +330,8 @@ local TeleportButton = TeleportTab:CreateButton({
     Name = "Teleport",
     Callback = function()
         if SelectedPlayer then
-            teleportToPlayer(SelectedPlayer)
+            teleportToPla
+yer(SelectedPlayer)
         end
     end,
 })
