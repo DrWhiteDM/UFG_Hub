@@ -299,21 +299,31 @@ local function getPlayerList()
     return players
 end
 
-local PlayerDropdown = TeleportTab:CreateDropdown({
-    Name = "Chose player",
-    Options = getPlayerList(),
-    CurrentOption = nil,
-    MultipleOptions = false,
-    Flag = "PlayerDropdown1",
-    Callback = function(Option)
-        SelectedPlayer = Option[1]
-    end,
-})
+local function createPlayerDropdown()
+    return TeleportTab:CreateDropdown({
+        Name = "Chose player",
+        Options = getPlayerList(),
+        CurrentOption = nil,
+        MultipleOptions = false,
+        Flag = "PlayerDropdown1",
+        Callback = function(Option)
+            SelectedPlayer = Option[1]
+        end,
+    })
+end
+
+local PlayerDropdown = createPlayerDropdown()
 
 local RefreshButton = TeleportTab:CreateButton({
     Name = "Refresh list",
     Callback = function()
-        Rayfield.Flags["PlayerDropdown1"]:Set(getPlayerList())
+        local Parent = PlayerDropdown.Parent
+        local Order = PlayerDropdown.Order
+
+        PlayerDropdown:Destroy()
+        PlayerDropdown = createPlayerDropdown()
+        PlayerDropdown.Parent = Parent
+        PlayerDropdown.Order = Order
     end,
 })
 
