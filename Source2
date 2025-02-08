@@ -306,14 +306,23 @@ local PlayerDropdown = TeleportTab:CreateDropdown({
     MultipleOptions = false,
     Flag = "PlayerDropdown1",
     Callback = function(Option)
-        SelectedPlayer = Option[1]
+        if Option and Option[1] then
+            SelectedPlayer = Option[1]
+        else
+            SelectedPlayer = nil
+        end
     end,
 })
 
 local RefreshButton = TeleportTab:CreateButton({
     Name = "Refresh list",
     Callback = function()
-        PlayerDropdown:SetOptions(getPlayerList())
+        local players = getPlayerList()
+        if #players > 0 then
+            PlayerDropdown:SetOptions(players)
+        else
+            PlayerDropdown:SetOptions({"No players found"})
+        end
     end,
 })
 
