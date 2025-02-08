@@ -348,20 +348,14 @@ local TeleportButton = TeleportTab:CreateButton({
 
 -- Teleport to GemBoxes
 local SelectedGembox = nil
-local GemboxMap = {} -- Словарь для хранения соответствий имен и объектов
 
 local function getGemboxList()
     local gemboxes = {}
-    GemboxMap = {} -- Очищаем соответствие
-
     for i, box in pairs(game.Workspace.GemBoxes:GetChildren()) do
         if box:IsA("Model") then
-            local displayName = box.Name -- Имя без индекса
-            table.insert(gemboxes, displayName)
-            GemboxMap[displayName .. " [" .. i .. "]"] = box -- Храним связь имя -> объект
+            table.insert(gemboxes, box.Name .. " [" .. i .. "]")
         end
     end
-
     return gemboxes
 end
 
@@ -371,8 +365,9 @@ local GemboxDropdown = TeleportTab:CreateDropdown({
     CurrentOption = nil,
     Flag = "GemboxDropdown1",
     Callback = function(Option)
-        for key, box in pairs(GemboxMap) do
-            if key:match(Option[1]) then -- Ищем соответствие по имени
+        local gemboxes = game.Workspace.GemBoxes:GetChildren()
+        for _, box in pairs(gemboxes) do
+            if Option[1] == box.Name .. " [" .. table.find(gemboxes, box) .. "]" then
                 SelectedGembox = box
                 break
             end
@@ -416,6 +411,7 @@ local TeleportGemboxButton = TeleportTab:CreateButton({
     end,
 })
 
+-- Notification
 -- Notification when a new Gembox appears
 game.Workspace.GemBoxes.ChildAdded:Connect(function(child)
     if child:IsA("Model") then
