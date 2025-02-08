@@ -286,7 +286,7 @@ local InfiniteJump_Toggle = HacksTab:CreateToggle({
 })
 
 -- Teleport Tab
--- Teleport
+-- Teleport Players
 local SelectedPlayer = nil
 
 local function getPlayerList()
@@ -300,7 +300,7 @@ local function getPlayerList()
 end
 
 local PlayerDropdown = TeleportTab:CreateDropdown({
-    Name = "Chose player",
+    Name = "Chose Player",
     Options = getPlayerList(),
     CurrentOption = nil,
     MultipleOptions = false,
@@ -311,7 +311,7 @@ local PlayerDropdown = TeleportTab:CreateDropdown({
 })
 
 local RefreshButton = TeleportTab:CreateButton({
-    Name = "Refresh list",
+    Name = "Refresh Player List",
     Callback = function()
         local players = getPlayerList()
         PlayerDropdown:Refresh(players, false)
@@ -328,10 +328,70 @@ local function teleportToPlayer(targetPlayerName)
 end
 
 local TeleportButton = TeleportTab:CreateButton({
-    Name = "Teleport",
+    Name = "Teleport to Player",
     Callback = function()
         if SelectedPlayer then
             teleportToPlayer(SelectedPlayer)
         end
     end,
 })
+
+-- Teleport GemBoxes
+local SelectedGembox = nil
+
+local function getGemboxList()
+    local gemboxes = {}
+    for _, box in pairs(game.Workspace.GemBoxes:GetChildren()) do
+        table.insert(gemboxes, box.Name)
+    end
+    return gemboxes
+end
+
+local GemboxDropdown = TeleportTab:CreateDropdown({
+    Name = "Choose Gembox",
+    Options = getGemboxList(),
+    CurrentOption = nil,
+    Flag = "GemboxDropdown1",
+    Callback = function(Option)
+        SelectedGembox = game.Workspace.GemBoxes:FindFirstChild(Option[1])
+    end,
+})
+
+local RefreshGemboxButton = TeleportTab:CreateButton({
+    Name = "Refresh Gembox List",
+    Callback = function()
+        local gemboxes = getGemboxList()
+        GemboxDropdown:Refresh(gemboxes, false)
+    end,
+})
+
+local function teleportToGembox(targetGembox)
+    local localPlayer = game.Players.LocalPlayer
+    if targetGembox and targetGembox:FindFirstChildOfClass("BasePart") then
+        localPlayer.Character:MoveTo(targetGembox:FindFirstChildOfClass("BasePart").Position)
+    end
+end
+
+local TeleportGemboxButton = TeleportTab:CreateButton({
+    Name = "Teleport to Gembox",
+    Callback = function()
+        if SelectedGembox then
+            teleportToGembox(SelectedGembox)
+        end
+    end,
+})
+
+-- Notification
+-- GemBoxes
+game.Workspace.GemBoxes.ChildAdded:Connect(function(child)
+    if child:IsA("Model") then
+        Rayfield:Notify({
+            Title = "New Gembox!",
+            Content = "A new Gembox has appeared!",
+            Duration = 5,
+            Image = 4483362458,
+        })
+        local gemboxes = getGemboxList()
+        GemboxDropdown:Refresh(gemboxes, false)
+    end
+end)
