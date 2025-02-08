@@ -351,9 +351,9 @@ local SelectedGembox = nil
 
 local function getGemboxList()
     local gemboxes = {}
-    for i, box in pairs(game.Workspace.GemBoxes:GetChildren()) do
+    for _, box in pairs(game.Workspace.GemBoxes:GetChildren()) do
         if box:IsA("Model") then
-            table.insert(gemboxes, box.Name .. " (" .. i .. ")")
+            table.insert(gemboxes, box.Name)
         end
     end
     return gemboxes
@@ -365,10 +365,7 @@ local GemboxDropdown = TeleportTab:CreateDropdown({
     CurrentOption = nil,
     Flag = "GemboxDropdown1",
     Callback = function(Option)
-        local index = tonumber(Option[1]:match("%((%d+)%)"))
-        if index then
-            SelectedGembox = game.Workspace.GemBoxes:GetChildren()[index]
-        end
+        SelectedGembox = game.Workspace.GemBoxes:FindFirstChild(Option[1]) or nil
     end,
 })
 
@@ -408,6 +405,7 @@ local TeleportGemboxButton = TeleportTab:CreateButton({
     end,
 })
 
+-- Notification
 -- Notification when a new Gembox appears
 game.Workspace.GemBoxes.ChildAdded:Connect(function(child)
     if child:IsA("Model") then
