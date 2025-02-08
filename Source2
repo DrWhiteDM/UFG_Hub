@@ -287,53 +287,50 @@ local InfiniteJump_Toggle = HacksTab:CreateToggle({
 
 -- Teleport Tab
 -- Teleport
-local selectedPlayer
+local SelectedPlayer = nil
 
-local PlayerDropdown = TeleportTab:CreateDropdown({
-    Name = "Select a Player",
-    Options = {},
-    Callback = function(Value)
-        selectedPlayer = Value
-    end
-})
-
-local function UpdatePlayerList()
+local function getPlayerList()
     local players = {}
-    for _, player in ipairs(game.Players:GetPlayers()) do
-        table.insert(players, player.Name)
-    end
-    PlayerDropdown:Refresh(players)
-end
-
-TeleportTab:CreateButton({
-    Name = "Refresh List",
-    Callback = function()
-        UpdatePlayerList()
-    end
-})
-
-TeleportTab:CreateButton({
-    Name = "Teleport",
-    Callback = function()
-        if selectedPlayer then
-            local player = game.Players:FindFirstChild(selectedPlayer)
-            local localPlayer = game.Players.LocalPlayer
-
-            if player and player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
-                if localPlayer.Character and localPlayer.Character:FindFirstChild("HumanoidRootPart") then
-                    localPlayer.Character.HumanoidRootPart.CFrame =
-                        player.Character.HumanoidRootPart.CFrame + Vector3.new(0, 3, 0)
-                    print("Teleported to " .. selectedPlayer)
-                else
-                    print("Error: Your character is missing HumanoidRootPart.")
-                end
-            else
-                print("Error: Target player not found or missing HumanoidRootPart.")
-            end
-        else
-            print("Error: No player selected.")
+    for _, player in pairs(game:GetService("Players"):GetPlayers()) do
+        if player ~= game.Players.LocalPlayer then
+            table.insert(players, player.Name)
         end
     end
+    return players
+end
+
+local PlayerDropdown = TeleportTab:CreateDropdown({
+    Name = "Choose player",
+    Options = getPlayerList(),
+    CurrentOption = nil,
+    MultipleOptions = false,
+    Flag = "PlayerDropdown1",
+    Callback = function(Option)
+        SelectedPlayer = Option
+    end,
 })
 
-UpdatePlayerList()
+local RefreshButton = TeleportTab:CreateButton({
+    Name = "Refresh list",
+    Callback = function()
+        PlayerDropdown:Refresh(getPlayerList(), false)
+    end,
+})
+
+local function teleportToPlayer(targetPlayerName)
+    local localPlayer = game.Players.LocalPlayer
+    local targetPlayer = game.Players:FindFirstChild(targetPlayerName)
+
+    if targetPlayer and targetPlayer.Character and targetPlayer.Character:FindFirstChild("HumanoidRootPart") then
+        localPlayer.Character:MoveTo(targetPlayer.Character.HumanoidRootPart.Position)
+    end
+end
+
+local TeleportButton = TeleportTab:CreateButton({
+    Name = "Teleport",
+    Callback = function()
+        if SelectedPlayer then
+            teleportToPlayer(SelectedPlayer)
+        end
+    end,
+})
