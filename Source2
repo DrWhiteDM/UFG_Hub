@@ -369,10 +369,11 @@ local RefreshGemboxButton = TeleportTab:CreateButton({
 local function teleportToGembox(targetGembox)
     local localPlayer = game.Players.LocalPlayer
     local character = localPlayer.Character
-    if character and targetGembox and targetGembox:FindFirstChildOfClass("BasePart") then
+    if character and targetGembox then
+        local basePart = targetGembox:FindFirstChildWhichIsA("BasePart", true) -- Находим первую доступную BasePart
         local hrp = character:FindFirstChild("HumanoidRootPart")
-        if hrp then
-            hrp.CFrame = targetGembox:FindFirstChildOfClass("BasePart").CFrame + Vector3.new(0, 3, 0) -- Slight lift when teleporting
+        if hrp and basePart then
+            hrp.CFrame = basePart.CFrame + Vector3.new(0, 5, 0) -- Телепортируемся немного выше
         end
     end
 end
