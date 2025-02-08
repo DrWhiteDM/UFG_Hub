@@ -367,8 +367,9 @@ local RefreshGemboxButton = TeleportTab:CreateButton({
 
 local function teleportToGembox(targetGembox)
     local localPlayer = game.Players.LocalPlayer
-    if targetGembox and targetGembox:FindFirstChildOfClass("BasePart") then
-        localPlayer.Character:MoveTo(targetGembox:FindFirstChildOfClass("BasePart").Position)
+    local character = localPlayer.Character
+    if character and targetGembox and targetGembox:FindFirstChildOfClass("BasePart") then
+        character:MoveTo(targetGembox:FindFirstChildOfClass("BasePart").Position)
     end
 end
 
