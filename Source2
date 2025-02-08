@@ -348,21 +348,20 @@ local TeleportButton = TeleportTab:CreateButton({
 
 -- Teleport to GemBoxes
 local SelectedGembox = nil
-local GemboxMap = {}
+local GemboxList = {}
 
 local function getGemboxList()
-    local gemboxes = {}
-    GemboxMap = {}
+    local gemboxNames = {}
+    GemboxList = {} -- Очищаем список перед обновлением
 
     for _, box in pairs(game.Workspace.GemBoxes:GetChildren()) do
         if box:IsA("Model") then
-            local uniqueName = box.Name .. "_" .. box:GetDebugId() -- Уникальный ID
-            table.insert(gemboxes, uniqueName)
-            GemboxMap[uniqueName] = box
+            table.insert(GemboxList, box) -- Храним сам объект
+            table.insert(gemboxNames, box.Name .. " [" .. #GemboxList .. "]") -- Добавляем индекс в название
         end
     end
 
-    return gemboxes
+    return gemboxNames
 end
 
 local GemboxDropdown = TeleportTab:CreateDropdown({
@@ -371,7 +370,12 @@ local GemboxDropdown = TeleportTab:CreateDropdown({
     CurrentOption = nil,
     Flag = "GemboxDropdown1",
     Callback = function(Option)
-        SelectedGembox = GemboxMap[Option]
+        local index = tonumber(Option:match("%[(%d+)%]")) -- Извлекаем индекс из названия
+        if index and GemboxList[index] then
+            SelectedGembox = GemboxList[index]
+        else
+            SelectedGembox = nil
+        end
     end,
 })
 
