@@ -313,7 +313,7 @@ local PlayerDropdown = TeleportTab:CreateDropdown({
 local RefreshButton = TeleportTab:CreateButton({
     Name = "Refresh list",
     Callback = function()
-        PlayerDropdown:SetOptions(getPlayerList())
+        Rayfield.Flags["PlayerDropdown1"]:Set(getPlayerList())
     end,
 })
 
