@@ -318,10 +318,13 @@ createPlayerDropdown()
 local RefreshButton = TeleportTab:CreateButton({
     Name = "Refresh list",
     Callback = function()
-        if PlayerDropdown then
-            PlayerDropdown:Destroy()
+        local NewOptions = getPlayerList()
+
+        if PlayerDropdown and typeof(PlayerDropdown.SetOptions) == "function" then
+            PlayerDropdown:SetOptions(NewOptions)
+        else
+            warn("Rayfield не поддерживает динамическое обновление списка!")
         end
-        createPlayerDropdown()
     end,
 })
 
