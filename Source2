@@ -347,11 +347,16 @@ local TeleportButton = TeleportTab:CreateButton({
 })
 
 -- Teleport to GemBoxes
--- Таблица для хранения уникальных ID гембоксов
 local gemboxIndex = 0
 local gemboxesData = {}
 
--- Функция для обновления списка гембоксов
+game.Workspace.GemBoxes.ChildRemoved:Connect(function(child)
+    if gemboxesData[child] then
+        gemboxesData[child] = nil
+        GemboxDropdown:Refresh(getGemboxList(), false)
+    end
+end)
+
 local function getGemboxList()
     local gemboxList = {}
     for _, box in pairs(game.Workspace.GemBoxes:GetChildren()) do
@@ -368,7 +373,6 @@ local function getGemboxList()
     return gemboxList
 end
 
--- Дропдаун выбора гембокса
 local GemboxDropdown = TeleportTab:CreateDropdown({
     Name = "Choose Gembox",
     Options = getGemboxList(),
@@ -386,7 +390,6 @@ local GemboxDropdown = TeleportTab:CreateDropdown({
     end,
 })
 
--- Кнопка обновления списка
 local RefreshGemboxButton = TeleportTab:CreateButton({
     Name = "Refresh Gembox List",
     Callback = function()
@@ -394,7 +397,6 @@ local RefreshGemboxButton = TeleportTab:CreateButton({
     end,
 })
 
--- Телепорт к выбранному гембоксу
 local function teleportToGembox(targetGembox)
     local localPlayer = game.Players.LocalPlayer
     local character = localPlayer.Character
@@ -407,7 +409,6 @@ local function teleportToGembox(targetGembox)
     end
 end
 
--- Кнопка телепорта
 local TeleportGemboxButton = TeleportTab:CreateButton({
     Name = "Teleport to Gembox",
     Callback = function()
@@ -425,7 +426,8 @@ local TeleportGemboxButton = TeleportTab:CreateButton({
     end,
 })
 
--- Авто-обновление списка при появлении нового гембокса
+-- Notification
+-- Auto-update the list when a new gembox appears
 game.Workspace.GemBoxes.ChildAdded:Connect(function(child)
     if child:IsA("Model") then
         Rayfield:Notify({
@@ -439,14 +441,9 @@ game.Workspace.GemBoxes.ChildAdded:Connect(function(child)
 end)
 
 -- Удаление ID при удалении гембокса
-game.Workspace.GemBoxes.ChildRemoved:Connect(function(child)
-    if gemboxesData[child] then
-        gemboxesData[child] = nil
-        GemboxDropdown:Refresh(getGemboxList(), false)
-    end
-end)
 
--- Проверка существующих гембоксов при запуске
+
+-- Checking existing gemboxes on startup
 local function checkExistingGemboxes()
     local gemboxCount = #game.Workspace.GemBoxes:GetChildren()
     if gemboxCount > 0 then
