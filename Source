@@ -208,3 +208,33 @@ TeleportTab:CreateButton({
         end
     end,
 })
+
+-- Notification
+-- Auto-update the list when a new gembox appears
+game.Workspace.GemBoxes.ChildAdded:Connect(function(child)
+    if child:IsA("Model") then
+        Rayfield:Notify({
+            Title = "New Gembox!",
+            Content = "A new Gembox has appeared!",
+            Duration = 5,
+            Image = 4483362458,
+        })
+        GemboxDropdown:Refresh(getGemboxList(), false)
+    end
+end)
+
+-- Checking existing gemboxes on startup
+local function checkExistingGemboxes()
+    local gemboxCount = #game.Workspace.GemBoxes:GetChildren()
+    if gemboxCount > 0 then
+        Rayfield:Notify({
+            Title = "Gemboxes Found!",
+            Content = "There are already " .. gemboxCount .. " Gembox(es) in the game!",
+            Duration = 5,
+            Image = 4483362458,
+        })
+    end
+    GemboxDropdown:Refresh(getGemboxList(), false)
+end
+
+checkExistingGemboxes()
