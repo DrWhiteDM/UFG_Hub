@@ -347,28 +347,46 @@ local TeleportButton = TeleportTab:CreateButton({
 })
 
 -- Teleport to GemBoxes
-local SelectedGembox = nil
+-- Таблица для хранения уникальных ID гембоксов
+local gemboxIndex = 0
+local gemboxesData = {}
 
+-- Функция для обновления списка гембоксов
 local function getGemboxList()
-    local gemboxes = {}
+    local gemboxList = {}
     for _, box in pairs(game.Workspace.GemBoxes:GetChildren()) do
         if box:IsA("Model") then
-            table.insert(gemboxes, box.Name)
+            -- Если у гембокса еще нет ID, присваиваем новый
+            if not gemboxesData[box] then
+                gemboxIndex = gemboxIndex + 1
+                gemboxesData[box] = gemboxIndex
+            end
+            -- Добавляем гембокс в список с уникальным индексом
+            table.insert(gemboxList, box.Name .. " #" .. gemboxesData[box])
         end
     end
-    return gemboxes
+    return gemboxList
 end
 
+-- Дропдаун выбора гембокса
 local GemboxDropdown = TeleportTab:CreateDropdown({
     Name = "Choose Gembox",
     Options = getGemboxList(),
     CurrentOption = nil,
     Flag = "GemboxDropdown1",
     Callback = function(Option)
-        SelectedGembox = game.Workspace.GemBoxes:FindFirstChild(Option[1]) or nil
+        -- Поиск по уникальному ID
+        for box, id in pairs(gemboxesData) do
+            if box and box.Parent and Option[1] == box.Name .. " #" .. id then
+                SelectedGembox = box
+                return
+            end
+        end
+        SelectedGembox = nil
     end,
 })
 
+-- Кнопка обновления списка
 local RefreshGemboxButton = TeleportTab:CreateButton({
     Name = "Refresh Gembox List",
     Callback = function()
@@ -376,6 +394,7 @@ local RefreshGemboxButton = TeleportTab:CreateButton({
     end,
 })
 
+-- Телепорт к выбранному гембоксу
 local function teleportToGembox(targetGembox)
     local localPlayer = game.Players.LocalPlayer
     local character = localPlayer.Character
@@ -388,6 +407,7 @@ local function teleportToGembox(targetGembox)
     end
 end
 
+-- Кнопка телепорта
 local TeleportGemboxButton = TeleportTab:CreateButton({
     Name = "Teleport to Gembox",
     Callback = function()
@@ -405,8 +425,7 @@ local TeleportGemboxButton = TeleportTab:CreateButton({
     end,
 })
 
--- Notification
--- Notification when a new Gembox appears
+-- Авто-обновление списка при появлении нового гембокса
 game.Workspace.GemBoxes.ChildAdded:Connect(function(child)
     if child:IsA("Model") then
         Rayfield:Notify({
@@ -419,7 +438,15 @@ game.Workspace.GemBoxes.ChildAdded:Connect(function(child)
     end
 end)
 
--- Notification if Gemboxes already exist on the server
+-- Удаление ID при удалении гембокса
+game.Workspace.GemBoxes.ChildRemoved:Connect(function(child)
+    if gemboxesData[child] then
+        gemboxesData[child] = nil
+        GemboxDropdown:Refresh(getGemboxList(), false)
+    end
+end)
+
+-- Проверка существующих гембоксов при запуске
 local function checkExistingGemboxes()
     local gemboxCount = #game.Workspace.GemBoxes:GetChildren()
     if gemboxCount > 0 then
