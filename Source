@@ -1,169 +1,210 @@
 local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
 
 local Window = Rayfield:CreateWindow({
-   Name = "ufg hub",
-   Icon = 0, -- Icon in Topbar. Can use Lucide Icons (string) or Roblox Image (number). 0 to use no icon (default).
-   LoadingTitle = "ufg hub",
+   Name = "Untitled Fling Game Hub",
+   Icon = 0,
+   LoadingTitle = "Untitled Fling Game Hub",
    LoadingSubtitle = "by DrWhite & wellof",
-   Theme = "Default", -- Check https://docs.sirius.menu/rayfield/configuration/themes
-
-   DisableRayfieldPrompts = false,
-   DisableBuildWarnings = false, -- Prevents Rayfield from warning when the script has a version mismatch with the interface
-
-   ConfigurationSaving = {
-      Enabled = false,
-      FolderName = nil, -- Create a custom folder for your hub/game
-      FileName = "Big Hub"
-   },
-
-   Discord = {
-      Enabled = false, -- Prompt the user to join your Discord server if their executor supports it
-      Invite = "noinvitelink", -- The Discord invite code, do not include discord.gg/. E.g. discord.gg/ ABCD would be ABCD
-      RememberJoins = true -- Set this to false to make them join the discord every time they load it up
-   },
-
-   KeySystem = false, -- Set this to true to use our key system
-   KeySettings = {
-      Title = "Untitled",
-      Subtitle = "Key System",
-      Note = "No method of obtaining the key is provided", -- Use this to tell the user how to get a key
-      FileName = "Key", -- It is recommended to use something unique as other scripts using Rayfield may overwrite your key file
-      SaveKey = true, -- The user's key will be saved, but if you change the key, they will be unable to use your script
-      GrabKeyFromSite = false, -- If this is true, set Key below to the RAW site you would like Rayfield to get the key from
-      Key = {"Hello"} -- List of keys that will be accepted by the system, can be RAW file links (pastebin, github etc) or simple strings ("hello","key22")
-   }
+   Theme = "Default",
+   ConfigurationSaving = { Enabled = false },
+   Discord = { Enabled = false },
+   KeySystem = false
 })
 
--- Tabs:
-local HacksTab = Window:CreateTab("Hacks", 4483362458) -- Title, Image
-local VisualTab = Window:CreateTab("Visual", 4483362458) -- Title, Image
-local KeybindsTab = Window:CreateTab("Keybinds", 4483362458) -- Title, Image
+-- Tabs
+local HacksTab = Window:CreateTab("Hacks", 4483362458)
+local VisualTab = Window:CreateTab("Visual", 4483362458)
+local KeybindsTab = Window:CreateTab("Keybinds", 4483362458)
+local TeleportTab = Window:CreateTab("Teleport", 4483362458)
 
--- Keybinds:
--- Pallet Keybind
-local PalletKeybind = InvisibleTab:CreateKeybind({
-   Name = "Pallet Spawn",
-   CurrentKeybind = "G",
-   HoldToInteract = false,
-   Flag = "Keybind1", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
-   Callback = function(Keybind)
-   local args = {
-      [1] = "BrownDoska"
-   }
- 
-   game:GetService("ReplicatedStorage").Spawn:InvokeServer(unpack(args)) -- The function that takes place when the keybind is pressed
-   -- The variable (Keybind) is a boolean for whether the keybind is being held or not (HoldToInteract needs to be true)
-   end,
+-- Keybinds
+local function createKeybind(name, key, flag, item)
+    return KeybindsTab:CreateKeybind({
+        Name = name,
+        CurrentKeybind = key,
+        HoldToInteract = false,
+        Flag = flag,
+        Callback = function()
+            game:GetService("ReplicatedStorage").Spawn:InvokeServer(item)
+        end,
+    })
+end
+
+local PalletKeybind = createKeybind("Pallet Spawn", "G", "PalletKeybind", "BrownDoska")
+local SpeedyPotionKeybind = createKeybind("Speedy Potion", "C", "SpeedyPotionKeybind", "Speedy Potion")
+local AntiGPotionKeybind = createKeybind("AntiG Potion", "V", "AntiGPotionKeybind", "AntiG Potion")
+local LargePotionKeybind = createKeybind("Large Potion", "Z", "LargePotionKeybind", "Large Potion")
+local SmallPotionKeybind = createKeybind("Small Potion", "X", "SmallPotionKeybind", "Small Potion")
+
+-- Input fields
+local function createInput(name, key, flag, keybind)
+    return KeybindsTab:CreateInput({
+        Name = name,
+        CurrentValue = key,
+        PlaceholderText = "Enter new key",
+        Flag = flag,
+        Callback = function(text)
+            if type(text) == "string" and text:match("^[A-Za-z0-9]$") then
+                keybind:Set(string.upper(text))
+            end
+        end,
+    })
+end
+
+createInput("Pallet", "G", "PalletInputKeybind", PalletKeybind)
+createInput("Speedy Potion", "C", "SpeedyPotionInputKeybind", SpeedyPotionKeybind)
+createInput("AntiG Potion", "V", "AntiGPotionInputKeybind", AntiGPotionKeybind)
+createInput("Large Potion", "Z", "LargePotionInputKeybind", LargePotionKeybind)
+createInput("Small Potion", "X", "SmallPotionInputKeybind", SmallPotionKeybind)
+
+-- ESP System
+local Players = game:GetService("Players")
+local LocalPlayer = Players.LocalPlayer
+local ESP_Enabled = false
+
+local function toggleESP(enable)
+    ESP_Enabled = enable
+    for _, player in pairs(Players:GetPlayers()) do
+        if player ~= LocalPlayer then
+            local character = player.Character
+            if character then
+                local highlight = character:FindFirstChild("ESP_Highlight")
+                if enable then
+                    if not highlight then
+                        highlight = Instance.new("Highlight")
+                        highlight.Name = "ESP_Highlight"
+                        highlight.Parent = character
+                        highlight.FillColor = Color3.fromRGB(255, 0, 0)
+                        highlight.OutlineColor = Color3.fromRGB(255, 255, 255)
+                    end
+                else
+                    if highlight then
+                        highlight:Destroy()
+                    end
+                end
+            end
+        end
+    end
+end
+
+HacksTab:CreateToggle({
+    Name = "ESP",
+    CurrentValue = false,
+    Flag = "ESPToggle",
+    Callback = toggleESP,
 })
 
-local PalletKeybindInput = KeybindsTab:CreateInput({
-   Name = "Pallet",
-   CurrentValue = "G",
-   PlaceholderText = "Enter new key",
-   RemoveTextAfterFocusLost = false,
-   Flag = "InputKeybind1",
-   Callback = function(Text)
-      PalletKeybind:Set(Text:upper())
-   end,
+-- Infinite Jump
+local UserInputService = game:GetService("UserInputService")
+local jumpConnection
+
+local function toggleInfiniteJump(enable)
+    if enable and not jumpConnection then
+        jumpConnection = UserInputService.JumpRequest:Connect(function()
+            if LocalPlayer.Character and LocalPlayer.Character:FindFirstChildOfClass("Humanoid") then
+                LocalPlayer.Character:FindFirstChildOfClass("Humanoid"):ChangeState(Enum.HumanoidStateType.Jumping)
+            end
+        end)
+    elseif not enable and jumpConnection then
+        jumpConnection:Disconnect()
+        jumpConnection = nil
+    end
+end
+
+HacksTab:CreateToggle({
+    Name = "Infinite Jump",
+    CurrentValue = false,
+    Flag = "InfiniteJumpToggle",
+    Callback = toggleInfiniteJump,
 })
 
--- Speedy Potion Keybind
-local SpeedyPotionKeybind = KeybindsTab:CreateKeybind({
-   Name = "Speedy Potion Keybind",
-   CurrentKeybind = "C",
-   HoldToInteract = false,
-   Flag = "Keybind1", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
-   Callback = function(Keybind)
-   local args = {
-      [1] = "Speedy Potion"
-   }
- 
-   game:GetService("ReplicatedStorage").Spawn:InvokeServer(unpack(args)) -- The function that takes place when the keybind is pressed
-   -- The variable (Keybind) is a boolean for whether the keybind is being held or not (HoldToInteract needs to be true)
-   end,
+-- Teleport to Players
+local function getPlayerList()
+    local players = {}
+    for _, player in pairs(Players:GetPlayers()) do
+        if player ~= LocalPlayer then
+            table.insert(players, player.Name)
+        end
+    end
+    return players
+end
+
+local SelectedPlayer
+local PlayerDropdown = TeleportTab:CreateDropdown({
+    Name = "Choose Player",
+    Options = getPlayerList(),
+    Callback = function(option) SelectedPlayer = option[1] end,
 })
 
-local SpeedyPotionKeybindInput = KeybindsTab:CreateInput({
-   Name = "Speedy Potion",
-   CurrentValue = "C",
-   PlaceholderText = "Enter new key",
-   RemoveTextAfterFocusLost = false,
-   Flag = "InputKeybind1",
-   Callback = function(Text)
-      SpeedyPotionKeybind:Set(Text:upper())
-   end,
+TeleportTab:CreateButton({
+    Name = "Refresh Player List",
+    Callback = function() PlayerDropdown:Refresh(getPlayerList(), false) end,
 })
 
--- AntiG Potion Keybind
-local AntiGPotionKeybind = KeybindsTab:CreateKeybind({
-   Name = "AntiG Potion",
-   CurrentKeybind = "V",
-   HoldToInteract = false,
-   Flag = "Keybind1", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
-   Callback = function(Keybind)
-   local args = {
-      [1] = "AntiG Potion"
-   }
- 
-   game:GetService("ReplicatedStorage").Spawn:InvokeServer(unpack(args)) -- The function that takes place when the keybind is pressed
-   -- The variable (Keybind) is a boolean for whether the keybind is being held or not (HoldToInteract needs to be true)
-   end,
+game.Players.PlayerAdded:Connect(function()
+    PlayerDropdown:Refresh(getPlayerList(), false)
+end)
+
+TeleportTab:CreateButton({
+    Name = "Teleport to Player",
+    Callback = function()
+        local target = Players:FindFirstChild(SelectedPlayer)
+        if target and target.Character and target.Character:FindFirstChild("HumanoidRootPart") then
+            local hrp = LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
+            if hrp then hrp.CFrame = target.Character.HumanoidRootPart.CFrame end
+        end
+    end,
 })
 
-local LargePotionKeybind = KeybindsTab:CreateKeybind({
-   Name = "Large Potion",
-   CurrentKeybind = "Z",
-   HoldToInteract = false,
-   Flag = "Keybind1", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
-   Callback = function(Keybind)
-   local args = {
-      [1] = "Large Potion"
-   }
- 
-   game:GetService("ReplicatedStorage").Spawn:InvokeServer(unpack(args)) -- The function that takes place when the keybind is pressed
-   -- The variable (Keybind) is a boolean for whether the keybind is being held or not (HoldToInteract needs to be true)
-   end,
+-- Teleport to GemBoxes
+local gemboxIndex, gemboxesData = 0, {}
+
+local function getGemboxList()
+    local gemboxList = {}
+    for _, box in pairs(game.Workspace.GemBoxes:GetChildren()) do
+        if box:IsA("Model") then
+            if not gemboxesData[box] then
+                gemboxIndex = gemboxIndex + 1
+                gemboxesData[box] = gemboxIndex
+            end
+            table.insert(gemboxList, box.Name .. " #" .. gemboxesData[box])
+        end
+    end
+    return gemboxList
+end
+
+local SelectedGembox
+local GemboxDropdown = TeleportTab:CreateDropdown({
+    Name = "Choose Gembox",
+    Options = getGemboxList(),
+    Callback = function(option)
+        for box, id in pairs(gemboxesData) do
+            if option[1] == box.Name .. " #" .. id then
+                SelectedGembox = box
+                return
+            end
+        end
+        SelectedGembox = nil
+    end,
 })
 
-local SmallPotionKeybind = KeybindsTab:CreateKeybind({
-   Name = "Small Potion",
-   CurrentKeybind = "X",
-   HoldToInteract = false,
-   Flag = "Keybind1", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
-   Callback = function(Keybind)
-   local args = {
-      [1] = "Small Potion"
-   }
- 
-   game:GetService("ReplicatedStorage").Spawn:InvokeServer(unpack(args)) -- The function that takes place when the keybind is pressed
-   -- The variable (Keybind) is a boolean for whether the keybind is being held or not (HoldToInteract needs to be true)
-   end,
+TeleportTab:CreateButton({
+    Name = "Refresh Gembox List",
+    Callback = function() GemboxDropdown:Refresh(getGemboxList(), false) end,
 })
 
--- Visual
-local SkinDropdown = VisualTab:CreateDropdown({
-   Name = "Skin Lines",
-   Options = {"Default","Gravity","Frozen"},
-   CurrentOption = "Default",
-   MultipleOptions = false,
-   Flag = "Dropdown1", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
-   Callback = function(Options)
-      game.Players.LocalPlayer:SetAttribute("Skin", Options[1]) -- The function that takes place when the selected option is changed
-   -- The variable (Options) is a table of strings for the current selected options
-   end,
-})
+game.Workspace.GemBoxes.ChildRemoved:Connect(function(child)
+    gemboxesData[child] = nil
+    GemboxDropdown:Refresh(getGemboxList(), false)
+end)
 
-local GemInput = VisualTab:CreateInput({
-   Name = "Set Gems",
-   CurrentValue = "",
-   PlaceholderText = "Enter number",
-   RemoveTextAfterFocusLost = false,
-   Flag = "Input1",
-   Callback = function(Text)
-      local numberValue = tonumber(Text)
-      if numberValue then
-   game.Players.LocalPlayer:SetAttribute("Rupees", numberValue)
-      end -- The function that takes place when the input is changed
-   -- The variable (Text) is a string for the value in the text box
-   end,
+TeleportTab:CreateButton({
+    Name = "Teleport to Gembox",
+    Callback = function()
+        if SelectedGembox then
+            local basePart = SelectedGembox:FindFirstChildWhichIsA("BasePart", true)
+            local hrp = LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
+            if hrp and basePart then hrp.CFrame = basePart.CFrame + Vector3.new(0, 5, 0) end
+        end
+    end,
 })
