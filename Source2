@@ -440,9 +440,6 @@ game.Workspace.GemBoxes.ChildAdded:Connect(function(child)
     end
 end)
 
--- Удаление ID при удалении гембокса
-
-
 -- Checking existing gemboxes on startup
 local function checkExistingGemboxes()
     local gemboxCount = #game.Workspace.GemBoxes:GetChildren()
