@@ -246,13 +246,28 @@ Players.PlayerRemoving:Connect(function(player)
     end
 end)
 
+Players.PlayerRemoving:Connect(function(player)
+    if player.Name == targetName then
+        game:GetService("StarterGui"):SetCore("SendNotification", {
+            Title = "🚪The player has left🚪",
+            Text = "🟤" player.Name .. " left the game.🟤",
+            Duration = 5
+        })
+
+        targetName = ""
+        nameBox.Text = ""
+
+        updateESP()
+    end
+end)
+
 RunService.Heartbeat:Connect(function()
     findTarget()
     aimAtTarget()
 end)
 
 game:GetService("StarterGui"):SetCore("SendNotification", {
-    Title = "🟡Welcome🟡",
-    Text = "⚠️Right Shift to open/close GUI⚠️",
+    Title = "⚠️Welcome⚠️",
+    Text = "🟡Right Shift to open/close GUI🟡",
     Duration = 3
 })
