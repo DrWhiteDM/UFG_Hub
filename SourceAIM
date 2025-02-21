@@ -181,7 +181,7 @@ UserInputService.InputBegan:Connect(function(input, gameProcessed)
         toggleESP()
     end
 
-    if input.KeyCode == Enum.KeyCode.Grave then -- Клавиша ` (тильда)
+    if input.KeyCode == Enum.KeyCode.RightShift then
         toggleGUI()
     end
 end)
@@ -190,8 +190,9 @@ aimKeyBox.FocusLost:Connect(function()
     local input = aimKeyBox.Text:upper()
     if string.match(input, "^[A-Z0-9]$") then
         aimKey = input
+        aimKeyBox.Text = input
     else
-        aimKeyBox.Text = ""
+        aimKeyBox.Text = "" 
     end
 end)
 
@@ -199,6 +200,7 @@ espKeyBox.FocusLost:Connect(function()
     local input = espKeyBox.Text:upper()
     if string.match(input, "^[A-Z0-9]$") then
         espKey = input
+        espKeyBox.Text = input
     else
         espKeyBox.Text = ""
     end
@@ -240,3 +242,9 @@ game:GetService("RunService").RenderStepped:Connect(function()
     findTarget()
     aimAtTarget()
 end)
+
+game:GetService("StarterGui"):SetCore("SendNotification", {
+    Title = "🟡Welcome🟡",
+    Text = "⚠️Right Shift to open/close GUI⚠️",
+    Duration = 3
+})
