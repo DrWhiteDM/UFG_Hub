@@ -2,7 +2,9 @@ local Players = game:GetService("Players")
 local LocalPlayer = Players.LocalPlayer
 local camera = workspace.CurrentCamera
 local UserInputService = game:GetService("UserInputService")
+local RunService = game:GetService("RunService")
 
+-- Settings
 local ESP_Enabled = false
 local Aim_Enabled = false
 local UI_Visible = true
@@ -13,10 +15,10 @@ local target = nil
 local aimKey = ""
 local espKey = ""
 
+-- GUI
 local screenGui = Instance.new("ScreenGui", LocalPlayer:WaitForChild("PlayerGui"))
 screenGui.ResetOnSpawn = false
 
--- UI creation
 local toggleButton = Instance.new("TextButton", screenGui)
 toggleButton.Size = UDim2.new(0.1, 0, 0.06, 0)
 toggleButton.Position = UDim2.new(0.45, 0, 0.02, 0)
@@ -51,12 +53,30 @@ smoothnessBox.Text = ""
 
 local nameBox = Instance.new("TextBox", guiContainer)
 nameBox.ClearTextOnFocus = false
-nameBox.Size = UDim2.new(1, 0, 0.3, 0)
-nameBox.Position = UDim2.new(0, 0, 0.3, 0)
+nameBox.Size = UDim2.new(0.6, 0, 0.3, 0)
+nameBox.Position = UDim2.new(0.2, 0, 0.3, 0)
 nameBox.PlaceholderText = "Enter target name"
 nameBox.PlaceholderColor3 = Color3.new(0, 0, 0)
 nameBox.TextScaled = true
 nameBox.Text = ""
+
+local aimKeyBox = Instance.new("TextBox", guiContainer)
+aimKeyBox.ClearTextOnFocus = false
+aimKeyBox.Size = UDim2.new(0.2, 0, 0.3, 0)
+aimKeyBox.Position = UDim2.new(0, 0, 0.3, 0)
+aimKeyBox.PlaceholderText = "AIM Key"
+aimKeyBox.PlaceholderColor3 = Color3.new(0, 0, 0)
+aimKeyBox.TextScaled = true
+aimKeyBox.Text = aimKey
+
+local espKeyBox = Instance.new("TextBox", guiContainer)
+espKeyBox.ClearTextOnFocus = false
+espKeyBox.Size = UDim2.new(0.2, 0, 0.3, 0)
+espKeyBox.Position = UDim2.new(0.8, 0, 0.3, 0)
+espKeyBox.PlaceholderText = "ESP Key"
+espKeyBox.PlaceholderColor3 = Color3.new(0, 0, 0)
+espKeyBox.TextScaled = true
+espKeyBox.Text = espKey
 
 local aimButton = Instance.new("TextButton", guiContainer)
 aimButton.Size = UDim2.new(0.5, 0, 0.3, 0)
@@ -72,34 +92,14 @@ espButton.Text = "ESP"
 espButton.BackgroundColor3 = Color3.new(1, 0, 0)
 espButton.TextScaled = true
 
-aimKeyBox = Instance.new("TextBox", guiContainer)
-aimKeyBox.ClearTextOnFocus = false
-aimKeyBox.Size = UDim2.new(0.3, 0, 0.3, 0)
-aimKeyBox.Position = UDim2.new(0.7, 0, 0.3, 0)
-aimKeyBox.PlaceholderText = "AIM Key"
-aimKeyBox.PlaceholderColor3 = Color3.new(0, 0, 0)
-aimKeyBox.TextScaled = true
-aimKeyBox.Text = aimKey
-aimKeyBox.ClearTextOnFocus = false
-
-espKeyBox = Instance.new("TextBox", guiContainer)
-espKeyBox.ClearTextOnFocus = false
-espKeyBox.Size = UDim2.new(0.3, 0, 0.3, 0)
-espKeyBox.Position = UDim2.new(0.7, 0, 0.6, 0)
-espKeyBox.PlaceholderText = "ESP Key"
-espKeyBox.PlaceholderColor3 = Color3.new(0, 0, 0)
-espKeyBox.TextScaled = true
-espKeyBox.Text = espKey
-espKeyBox.ClearTextOnFocus = false
-
 -- Functions
 local function findTarget()
+    if not LocalPlayer.Character or not LocalPlayer.Character:FindFirstChild("HumanoidRootPart") then return end
     target = nil
     local closestDistance = aimDistance or math.huge
     for _, player in pairs(Players:GetPlayers()) do
         if player ~= LocalPlayer and player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
-            local char = player.Character
-            local rootPart = char:FindFirstChild("HumanoidRootPart")
+            local rootPart = player.Character.HumanoidRootPart
             local distance = (LocalPlayer.Character.HumanoidRootPart.Position - rootPart.Position).Magnitude
             if (targetName == "" or player.Name == targetName) and distance < closestDistance then
                 target = rootPart
@@ -110,7 +110,7 @@ local function findTarget()
 end
 
 local function aimAtTarget()
-    if Aim_Enabled and target then
+    if Aim_Enabled and target and aimSmoothness then
         local distance = (LocalPlayer.Character.HumanoidRootPart.Position - target.Position).Magnitude
         if aimDistance and distance < aimDistance then
             local targetPos = target.Position
@@ -147,7 +147,7 @@ local function updateESP()
     end
 end
 
--- Event handler
+-- Event handlers
 local function toggleAIM()
     Aim_Enabled = not Aim_Enabled
     aimButton.BackgroundColor3 = Aim_Enabled and Color3.new(0, 1, 0) or Color3.new(1, 0, 0)
@@ -166,6 +166,7 @@ local function toggleESP()
         Text = ESP_Enabled and "🟢ESP ON🟢" or "🔴ESP OFF🔴",
         Duration = 2
     })
+    updateESP()
 end
 
 local function toggleGUI()
@@ -199,7 +200,7 @@ aimKeyBox.FocusLost:Connect(function()
         aimKey = input
         aimKeyBox.Text = input
     else
-        aimKeyBox.Text = "" 
+        aimKeyBox.Text = ""
     end
 end)
 
@@ -230,8 +231,8 @@ end)
 
 smoothnessBox.FocusLost:Connect(function()
     local smoothnessInput = tonumber(smoothnessBox.Text)
-    if input then
-        aimSmoothness = input
+    if smoothnessInput then
+        aimSmoothness = smoothnessInput
     else
         smoothnessBox.Text = ""
         aimSmoothness = nil
@@ -245,7 +246,7 @@ Players.PlayerRemoving:Connect(function(player)
     end
 end)
 
-game:GetService("RunService").RenderStepped:Connect(function()
+RunService.Heartbeat:Connect(function()
     findTarget()
     aimAtTarget()
 end)
