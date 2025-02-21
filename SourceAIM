@@ -13,6 +13,7 @@ local target = nil
 local screenGui = Instance.new("ScreenGui", LocalPlayer:WaitForChild("PlayerGui"))
 screenGui.ResetOnSpawn = false
 
+-- Создание UI
 local toggleButton = Instance.new("TextButton", screenGui)
 toggleButton.Size = UDim2.new(0.15, 0, 0.05, 0)
 toggleButton.Position = UDim2.new(0.425, 0, 0.02, 0)
@@ -57,16 +58,15 @@ espButton.Text = "ESP"
 espButton.BackgroundColor3 = Color3.new(1, 0, 0)
 espButton.TextScaled = true
 
+-- Функции
 local function findTarget()
     target = nil
     local closestDistance = maxAimDistance or math.huge
-
     for _, player in pairs(Players:GetPlayers()) do
         if player ~= LocalPlayer and player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
             local char = player.Character
             local rootPart = char:FindFirstChild("HumanoidRootPart")
             local distance = (LocalPlayer.Character.HumanoidRootPart.Position - rootPart.Position).Magnitude
-
             if (targetName == "" or player.Name == targetName) and distance < closestDistance then
                 target = rootPart
                 closestDistance = distance
@@ -82,7 +82,6 @@ local function aimAtTarget()
             local targetPos = target.Position
             local camPos = camera.CFrame.Position
             local newCFrame = CFrame.new(camPos, targetPos)
-
             -- Жесткость 0.5
             camera.CFrame = camera.CFrame:Lerp(newCFrame, 0.5)
         else
@@ -96,7 +95,6 @@ local function updateESP()
         if player ~= LocalPlayer and player.Character then
             local character = player.Character
             local highlight = character:FindFirstChild("ESP_Highlight")
-
             if ESP_Enabled and player.Name == targetName then
                 if not highlight then
                     highlight = Instance.new("Highlight")
@@ -116,15 +114,28 @@ local function updateESP()
     end
 end
 
+-- Обработчики событий
 aimButton.MouseButton1Click:Connect(function()
     Aim_Enabled = not Aim_Enabled
     aimButton.BackgroundColor3 = Aim_Enabled and Color3.new(0, 1, 0) or Color3.new(1, 0, 0)
+    game:GetService("StarterGui"):SetCore("SendNotification", {
+        Title = "⚔️AIM⚔️",
+        Text = Aim_Enabled and "🟢AIM ON🟢" or "🔴AIM OFF🔴",
+        Duration = 2,
+        Icon = "rbxassetid://6031068435"
+    })
 end)
 
 espButton.MouseButton1Click:Connect(function()
     ESP_Enabled = not ESP_Enabled
     espButton.BackgroundColor3 = ESP_Enabled and Color3.new(0, 1, 0) or Color3.new(1, 0, 0)
     updateESP()
+    game:GetService("StarterGui"):SetCore("SendNotification", {
+        Title = "🔎ESP🔍",
+        Text = ESP_Enabled and "🟢ESP ON🟢" or "🔴ESP OFF🔴",
+        Duration = 2,
+        Icon = "rbxassetid://6031068435"
+    })
 end)
 
 toggleButton.MouseButton1Click:Connect(function()
