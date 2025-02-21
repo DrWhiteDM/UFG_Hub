@@ -7,7 +7,7 @@ local ESP_Enabled = false
 local Aim_Enabled = false
 local UI_Visible = true
 local targetName = ""
-local maxAimDistance = nil
+local aimDistance = nil
 local aimSmoothness = nil
 local target = nil
 
@@ -32,7 +32,7 @@ guiContainer.BackgroundTransparency = 1
 local distanceBox = Instance.new("TextBox", guiContainer)
 distanceBox.Size = UDim2.new(0.5, 0, 0.3, 0)
 distanceBox.Position = UDim2.new(0, 0, 0, 0)
-distanceBox.PlaceholderText = "Enter aim distance"
+distanceBox.PlaceholderText = "Enter distance"
 distanceBox.PlaceholderColor3 = Color3.new(0, 0, 0)
 distanceBox.TextScaled = true
 distanceBox.Text = ""
@@ -70,7 +70,7 @@ espButton.TextScaled = true
 -- Functions
 local function findTarget()
     target = nil
-    local closestDistance = maxAimDistance or math.huge
+    local closestDistance = aimDistance or math.huge
     for _, player in pairs(Players:GetPlayers()) do
         if player ~= LocalPlayer and player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
             local char = player.Character
@@ -87,7 +87,7 @@ end
 local function aimAtTarget()
     if Aim_Enabled and target then
         local distance = (LocalPlayer.Character.HumanoidRootPart.Position - target.Position).Magnitude
-        if maxAimDistance and distance < maxAimDistance then
+        if aimDistance and distance < aimDistance then
             local targetPos = target.Position
             local camPos = camera.CFrame.Position
             local newCFrame = CFrame.new(camPos, targetPos)
