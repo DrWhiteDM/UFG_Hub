@@ -164,7 +164,9 @@ distanceBox.FocusLost:Connect(function()
         distanceBox.Text = ""
         maxAimDistance = nil
     end
-    
+end)
+
+smoothnessBox.FocusLost:Connect(function()
     local smoothnessInput = tonumber(smoothnessBox.Text)
     if smoothnessInput then
         aimSmoothness = smoothnessInput
