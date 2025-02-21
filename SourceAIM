@@ -1,3 +1,6 @@
+-- Script by DrWhite | Version 0.1.1 Alpha
+-- AIM and ESP functionality for Roblox games.
+
 local Players = game:GetService("Players")
 local LocalPlayer = Players.LocalPlayer
 local camera = workspace.CurrentCamera
@@ -15,7 +18,7 @@ local target = nil
 local aimKey = ""
 local espKey = ""
 
--- GUI
+-- GUI Setup
 local screenGui = Instance.new("ScreenGui", LocalPlayer:WaitForChild("PlayerGui"))
 screenGui.ResetOnSpawn = false
 
@@ -92,9 +95,9 @@ espButton.Text = "ESP"
 espButton.BackgroundColor3 = Color3.new(1, 0, 0)
 espButton.TextScaled = true
 
--- Functions
 local highlights = {}
 
+-- Find the target player
 local function findTarget()
     if not LocalPlayer.Character or not LocalPlayer.Character:FindFirstChild("HumanoidRootPart") then return end
     target = nil
@@ -111,6 +114,7 @@ local function findTarget()
     end
 end
 
+-- Aim at the target
 local function aimAtTarget()
     if Aim_Enabled and target and aimSmoothness then
         local distance = (LocalPlayer.Character.HumanoidRootPart.Position - target.Position).Magnitude
@@ -125,6 +129,7 @@ local function aimAtTarget()
     end
 end
 
+-- Update ESP (Highlight) for players
 local function updateESP()
     for _, player in pairs(Players:GetPlayers()) do
         if player ~= LocalPlayer then
@@ -156,7 +161,7 @@ local function updateESP()
     end
 end
 
--- Event handlers
+-- Toggle AIM on/off
 local function toggleAIM()
     Aim_Enabled = not Aim_Enabled
     aimButton.BackgroundColor3 = Aim_Enabled and Color3.new(0, 1, 0) or Color3.new(1, 0, 0)
@@ -167,6 +172,7 @@ local function toggleAIM()
     })
 end
 
+-- Toggle ESP on/off
 local function toggleESP()
     ESP_Enabled = not ESP_Enabled
     espButton.BackgroundColor3 = ESP_Enabled and Color3.new(0, 1, 0) or Color3.new(1, 0, 0)
@@ -178,15 +184,18 @@ local function toggleESP()
     updateESP()
 end
 
+-- Toggle GUI visibility
 local function toggleGUI()
     UI_Visible = not UI_Visible
     guiContainer.Visible = UI_Visible
 end
 
+-- Connect button events
 aimButton.MouseButton1Click:Connect(toggleAIM)
 espButton.MouseButton1Click:Connect(toggleESP)
 toggleButton.MouseButton1Click:Connect(toggleGUI)
 
+-- Handle key inputs
 UserInputService.InputBegan:Connect(function(input, gameProcessed)
     if gameProcessed then return end
 
@@ -203,6 +212,7 @@ UserInputService.InputBegan:Connect(function(input, gameProcessed)
     end
 end)
 
+-- Handle AIM key input
 aimKeyBox.FocusLost:Connect(function()
     local input = aimKeyBox.Text:upper()
     if string.match(input, "^[A-Z0-9]$") then
@@ -213,6 +223,7 @@ aimKeyBox.FocusLost:Connect(function()
     end
 end)
 
+-- Handle ESP key input
 espKeyBox.FocusLost:Connect(function()
     local input = espKeyBox.Text:upper()
     if string.match(input, "^[A-Z0-9]$") then
@@ -223,11 +234,13 @@ espKeyBox.FocusLost:Connect(function()
     end
 end)
 
+-- Handle target name input
 nameBox.FocusLost:Connect(function()
     targetName = nameBox.Text
     updateESP()
 end)
 
+-- Handle distance input
 distanceBox.FocusLost:Connect(function()
     local input = tonumber(distanceBox.Text)
     if input then
@@ -238,6 +251,7 @@ distanceBox.FocusLost:Connect(function()
     end
 end)
 
+-- Handle smoothness input
 smoothnessBox.FocusLost:Connect(function()
     local smoothnessInput = tonumber(smoothnessBox.Text)
     if smoothnessInput then
@@ -248,13 +262,7 @@ smoothnessBox.FocusLost:Connect(function()
     end
 end)
 
-Players.PlayerRemoving:Connect(function(player)
-    if player.Name == targetName then
-        targetName = ""
-        updateESP()
-    end
-end)
-
+-- Handle player leaving
 Players.PlayerRemoving:Connect(function(player)
     if player.Name == targetName then
         game:GetService("StarterGui"):SetCore("SendNotification", {
@@ -266,15 +274,20 @@ Players.PlayerRemoving:Connect(function(player)
         targetName = ""
         nameBox.Text = ""
 
-        updateESP()
+        if highlights[player] then
+            highlights[player]:Destroy()
+            highlights[player] = nil
+        end
     end
 end)
 
+-- Main loop
 RunService.Heartbeat:Connect(function()
     findTarget()
     aimAtTarget()
 end)
 
+-- Welcome message
 game:GetService("StarterGui"):SetCore("SendNotification", {
     Title = "⚠️Welcome⚠️",
     Text = "🟡Right Shift to open/close GUI🟡",
