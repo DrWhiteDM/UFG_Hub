@@ -8,6 +8,7 @@ local Aim_Enabled = false
 local UI_Visible = true
 local targetName = ""
 local maxAimDistance = nil
+local aimSmoothness = nil
 local target = nil
 
 local screenGui = Instance.new("ScreenGui", LocalPlayer:WaitForChild("PlayerGui"))
@@ -29,12 +30,20 @@ guiContainer.BorderSizePixel = 0
 guiContainer.BackgroundTransparency = 1
 
 local distanceBox = Instance.new("TextBox", guiContainer)
-distanceBox.Size = UDim2.new(1, 0, 0.3, 0)
+distanceBox.Size = UDim2.new(0.5, 0, 0.3, 0)
 distanceBox.Position = UDim2.new(0, 0, 0, 0)
 distanceBox.PlaceholderText = "Enter aim distance"
 distanceBox.PlaceholderColor3 = Color3.new(0, 0, 0)
 distanceBox.TextScaled = true
 distanceBox.Text = ""
+
+local smoothnessBox = Instance.new("TextBox", guiContainer)
+smoothnessBox.Size = UDim2.new(0.5, 0, 0.3, 0)
+smoothnessBox.Position = UDim2.new(0.55, 0, 0, 0)
+smoothnessBox.PlaceholderText = "Enter smoothness"
+smoothnessBox.PlaceholderColor3 = Color3.new(0, 0, 0)
+smoothnessBox.TextScaled = true
+smoothnessBox.Text = ""
 
 local nameBox = Instance.new("TextBox", guiContainer)
 nameBox.Size = UDim2.new(1, 0, 0.3, 0)
@@ -82,8 +91,7 @@ local function aimAtTarget()
             local targetPos = target.Position
             local camPos = camera.CFrame.Position
             local newCFrame = CFrame.new(camPos, targetPos)
-            -- Жесткость 0.5
-            camera.CFrame = camera.CFrame:Lerp(newCFrame, 0.5)
+            camera.CFrame = camera.CFrame:Lerp(newCFrame, aimSmoothness)
         else
             target = nil
         end
@@ -155,6 +163,14 @@ distanceBox.FocusLost:Connect(function()
     else
         distanceBox.Text = ""
         maxAimDistance = nil
+    end
+    
+    local smoothnessInput = tonumber(smoothnessBox.Text)
+    if smoothnessInput then
+        aimSmoothness = smoothnessInput
+    else
+        smoothnessBox.Text = ""
+        aimSmoothness = nil
     end
 end)
 
