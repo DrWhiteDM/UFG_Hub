@@ -32,6 +32,7 @@ guiContainer.BorderSizePixel = 0
 guiContainer.BackgroundTransparency = 1
 
 local distanceBox = Instance.new("TextBox", guiContainer)
+distanceBox.ClearTextOnFocus = false
 distanceBox.Size = UDim2.new(0.5, 0, 0.3, 0)
 distanceBox.Position = UDim2.new(0, 0, 0, 0)
 distanceBox.PlaceholderText = "Enter distance"
@@ -40,6 +41,7 @@ distanceBox.TextScaled = true
 distanceBox.Text = ""
 
 local smoothnessBox = Instance.new("TextBox", guiContainer)
+smoothnessBox.ClearTextOnFocus = false
 smoothnessBox.Size = UDim2.new(0.5, 0, 0.3, 0)
 smoothnessBox.Position = UDim2.new(0.5, 0, 0, 0)
 smoothnessBox.PlaceholderText = "Enter smoothness"
@@ -70,6 +72,7 @@ espButton.BackgroundColor3 = Color3.new(1, 0, 0)
 espButton.TextScaled = true
 
 aimKeyBox = Instance.new("TextBox", guiContainer)
+aimKeyBox.ClearTextOnFocus = false
 aimKeyBox.Size = UDim2.new(0.3, 0, 0.3, 0)
 aimKeyBox.Position = UDim2.new(0.7, 0, 0.3, 0)
 aimKeyBox.PlaceholderText = "Enter Aim Key"
@@ -78,6 +81,7 @@ aimKeyBox.Text = aimKey
 aimKeyBox.ClearTextOnFocus = false
 
 espKeyBox = Instance.new("TextBox", guiContainer)
+espKeyBox.ClearTextOnFocus = false
 espKeyBox.Size = UDim2.new(0.3, 0, 0.3, 0)
 espKeyBox.Position = UDim2.new(0.7, 0, 0.6, 0)
 espKeyBox.PlaceholderText = "Enter ESP Key"
@@ -193,7 +197,6 @@ aimKeyBox.FocusLost:Connect(function()
         aimKeyBox.Text = input
     else
         aimKeyBox.Text = "" 
-        aimKey = nil
     end
 end)
 
@@ -204,7 +207,6 @@ espKeyBox.FocusLost:Connect(function()
         espKeyBox.Text = input
     else
         espKeyBox.Text = ""
-        espKey = nil
     end
 end)
 
