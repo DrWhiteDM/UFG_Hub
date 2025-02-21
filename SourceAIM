@@ -13,9 +13,9 @@ local target = nil
 local screenGui = Instance.new("ScreenGui", LocalPlayer:WaitForChild("PlayerGui"))
 screenGui.ResetOnSpawn = false
 
--- Создание UI
+-- UI creation
 local toggleButton = Instance.new("TextButton", screenGui)
-toggleButton.Size = UDim2.new(0.15, 0, 0.1, 0)
+toggleButton.Size = UDim2.new(0.15, 0, 0.65, 0)
 toggleButton.Position = UDim2.new(0.425, 0, 0.02, 0)
 toggleButton.Text = "By DrWhite"
 toggleButton.BackgroundColor3 = Color3.new(0.8, 0.8, 0.8)
@@ -58,7 +58,7 @@ espButton.Text = "ESP"
 espButton.BackgroundColor3 = Color3.new(1, 0, 0)
 espButton.TextScaled = true
 
--- Функции
+-- Functions
 local function findTarget()
     target = nil
     local closestDistance = maxAimDistance or math.huge
@@ -114,7 +114,7 @@ local function updateESP()
     end
 end
 
--- Обработчики событий
+-- Event handler
 aimButton.MouseButton1Click:Connect(function()
     Aim_Enabled = not Aim_Enabled
     aimButton.BackgroundColor3 = Aim_Enabled and Color3.new(0, 1, 0) or Color3.new(1, 0, 0)
