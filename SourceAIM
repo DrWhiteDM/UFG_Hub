@@ -137,6 +137,7 @@ local function updateESP()
                 if player.Character then
                     highlight.Parent = player.Character
                 end
+
                 player.CharacterAdded:Connect(function(character)
                     highlight.Parent = character
                 end)
