@@ -141,32 +141,67 @@ local function updateESP()
 end
 
 -- Event handler
-aimButton.MouseButton1Click:Connect(function()
+local function toggleAIM()
     Aim_Enabled = not Aim_Enabled
     aimButton.BackgroundColor3 = Aim_Enabled and Color3.new(0, 1, 0) or Color3.new(1, 0, 0)
     game:GetService("StarterGui"):SetCore("SendNotification", {
         Title = "⚔️AIM⚔️",
         Text = Aim_Enabled and "🟢AIM ON🟢" or "🔴AIM OFF🔴",
-        Duration = 2,
-        Icon = "rbxassetid://6031068435"
+        Duration = 2
     })
-end)
+end
 
-espButton.MouseButton1Click:Connect(function()
+local function toggleESP()
     ESP_Enabled = not ESP_Enabled
     espButton.BackgroundColor3 = ESP_Enabled and Color3.new(0, 1, 0) or Color3.new(1, 0, 0)
-    updateESP()
     game:GetService("StarterGui"):SetCore("SendNotification", {
         Title = "🔎ESP🔍",
         Text = ESP_Enabled and "🟢ESP ON🟢" or "🔴ESP OFF🔴",
-        Duration = 2,
-        Icon = "rbxassetid://6031068435"
+        Duration = 2
     })
-end)
+end
 
-toggleButton.MouseButton1Click:Connect(function()
+local function toggleGUI()
     UI_Visible = not UI_Visible
     guiContainer.Visible = UI_Visible
+end
+
+aimButton.MouseButton1Click:Connect(toggleAIM)
+espButton.MouseButton1Click:Connect(toggleESP)
+toggleButton.MouseButton1Click:Connect(toggleGUI)
+
+UserInputService.InputBegan:Connect(function(input, gameProcessed)
+    if gameProcessed then return end
+
+    if aimKey ~= "" and input.KeyCode == Enum.KeyCode[aimKey] then
+        toggleAIM()
+    end
+
+    if espKey ~= "" and input.KeyCode == Enum.KeyCode[espKey] then
+        toggleESP()
+    end
+
+    if input.KeyCode == Enum.KeyCode.Grave then -- Клавиша ` (тильда)
+        toggleGUI()
+    end
+end)
+
+aimKeyBox.FocusLost:Connect(function()
+    local input = aimKeyBox.Text:upper()
+    if string.match(input, "^[A-Z0-9]$") then
+        aimKey = input
+    else
+        aimKeyBox.Text = ""
+    end
+end)
+
+espKeyBox.FocusLost:Connect(function()
+    local input = espKeyBox.Text:upper()
+    if string.match(input, "^[A-Z0-9]$") then
+        espKey = input
+    else
+        espKeyBox.Text = ""
+    end
 end)
 
 nameBox.FocusLost:Connect(function()
@@ -191,24 +226,6 @@ smoothnessBox.FocusLost:Connect(function()
     else
         smoothnessBox.Text = ""
         aimSmoothness = nil
-    end
-end)
-
-aimKeyBox.FocusLost:Connect(function()
-    local input = aimKeyBox.Text:upper(aimKeyBox.Text)
-    if string.match(input, "^[A-Z0-9]$") then
-        aimKey = input
-    else
-        aimKeyBox.Text = ""
-    end
-end)
-
-espKeyBox.FocusLost:Connect(function()
-    local input = espKeyBox.Text:upper(espKeyBox.Text)
-    if string.match(input, "^[A-Z0-9]$") then
-        espKey = input
-    else
-        espKeyBox.Text = ""
     end
 end)
 
