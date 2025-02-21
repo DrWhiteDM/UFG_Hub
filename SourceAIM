@@ -187,22 +187,24 @@ UserInputService.InputBegan:Connect(function(input, gameProcessed)
 end)
 
 aimKeyBox.FocusLost:Connect(function()
-    local input = aimKeyBox.Text:upper(aimKeyBox.Text)
+    local input = aimKeyBox.Text:upper()
     if string.match(input, "^[A-Z0-9]$") then
         aimKey = input
         aimKeyBox.Text = input
     else
         aimKeyBox.Text = "" 
+        aimKey = nil
     end
 end)
 
 espKeyBox.FocusLost:Connect(function()
-    local input = espKeyBox.Text:upper(espKeyBox.Text)
+    local input = espKeyBox.Text:upper()
     if string.match(input, "^[A-Z0-9]$") then
         espKey = input
         espKeyBox.Text = input
     else
         espKeyBox.Text = ""
+        espKey = nil
     end
 end)
 
