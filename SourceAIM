@@ -21,9 +21,10 @@ toggleButton.BackgroundColor3 = Color3.new(0.8, 0.8, 0.8)
 toggleButton.TextScaled = true
 
 local guiContainer = Instance.new("Frame", screenGui)
-guiContainer.Size = UDim2.new(0.3, 0, 0.15, 0)
+guiContainer.Size = UDim2.new(0.3, 0, 0.2, 0)
 guiContainer.Position = UDim2.new(0.35, 0, 0.7, 0)
 guiContainer.BackgroundColor3 = Color3.new(0, 0, 0)
+guiContainer.BorderSizePixel = 0
 guiContainer.BackgroundTransparency = 0.5
 
 local distanceBox = Instance.new("TextBox", guiContainer)
