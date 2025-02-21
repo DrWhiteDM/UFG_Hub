@@ -50,6 +50,7 @@ smoothnessBox.TextScaled = true
 smoothnessBox.Text = ""
 
 local nameBox = Instance.new("TextBox", guiContainer)
+nameBox.ClearTextOnFocus = false
 nameBox.Size = UDim2.new(1, 0, 0.3, 0)
 nameBox.Position = UDim2.new(0, 0, 0.3, 0)
 nameBox.PlaceholderText = "Enter target name"
