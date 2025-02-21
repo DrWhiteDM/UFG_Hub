@@ -9,10 +9,9 @@ local UI_Visible = true
 local targetName = ""
 local maxAimDistance = nil
 local target = nil
-local dragging = false
-local dragOffset = Vector2.new()
-local isDraggingToggle = false
-local dragStartTime = 0 -- Время начала перемещения
+
+local screenGui = Instance.new("ScreenGui")
+screenGui.Parent = LocalPlayer:WaitForChild("PlayerGui")
 
 local screenGui = Instance.new("ScreenGui")
 screenGui.ResetOnSpawn = false
