@@ -5,7 +5,7 @@ local UserInputService = game:GetService("UserInputService")
 
 local ESP_Enabled = false
 local Aim_Enabled = false
-local UI_Visible = true
+local UI_Visible = false
 local targetName = ""
 local maxAimDistance = nil
 local target = nil
@@ -16,7 +16,7 @@ screenGui.ResetOnSpawn = false
 local toggleButton = Instance.new("TextButton", screenGui)
 toggleButton.Size = UDim2.new(0.15, 0, 0.05, 0)
 toggleButton.Position = UDim2.new(0.425, 0, 0.02, 0)
-toggleButton.Text = "TOGGLE"
+toggleButton.Text = "By DrWhite"
 toggleButton.BackgroundColor3 = Color3.new(0.8, 0.8, 0.8)
 toggleButton.TextScaled = true
 
