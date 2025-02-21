@@ -1,0 +1,166 @@
+local Players = game:GetService("Players")
+local LocalPlayer = Players.LocalPlayer
+local camera = workspace.CurrentCamera
+local UserInputService = game:GetService("UserInputService")
+
+local ESP_Enabled = false
+local Aim_Enabled = false
+local UI_Visible = true
+local targetName = ""
+local maxAimDistance = nil
+local target = nil
+local dragging = false
+local dragOffset = Vector2.new()
+local isDraggingToggle = false
+local dragStartTime = 0 -- Время начала перемещения
+
+local screenGui = Instance.new("ScreenGui")
+screenGui.ResetOnSpawn = false
+screenGui.Parent = game:GetService("StarterGui")
+
+local toggleButton = Instance.new("TextButton", screenGui)
+toggleButton.Size = UDim2.new(0.15, 0, 0.05, 0)
+toggleButton.Position = UDim2.new(0.425, 0, 0.02, 0)
+toggleButton.Text = "TOGGLE"
+toggleButton.BackgroundColor3 = Color3.new(0.8, 0.8, 0.8) -- Светло-серый
+toggleButton.TextScaled = true
+
+local guiContainer = Instance.new("Frame", screenGui)
+guiContainer.Size = UDim2.new(0.3, 0, 0.2, 0)
+guiContainer.Position = UDim2.new(0.35, 0, 0.7, 0)
+guiContainer.BackgroundColor3 = Color3.new(0, 0, 0)
+guiContainer.BackgroundTransparency = 0.5
+
+local distanceBox = Instance.new("TextBox", guiContainer)
+distanceBox.Size = UDim2.new(1, 0, 0.3, 0)
+distanceBox.Position = UDim2.new(0, 0, 0, 0)
+distanceBox.PlaceholderText = "Enter aim distance"
+distanceBox.PlaceholderColor3 = Color3.new(0, 0, 0) -- Черный цвет текста
+distanceBox.TextScaled = true
+distanceBox.Text = ""
+
+local nameBox = Instance.new("TextBox", guiContainer)
+nameBox.Size = UDim2.new(1, 0, 0.3, 0)
+nameBox.Position = UDim2.new(0, 0, 0.3, 0)
+nameBox.PlaceholderText = "Enter target name"
+nameBox.PlaceholderColor3 = Color3.new(0, 0, 0) -- Черный цвет текста
+nameBox.TextScaled = true
+nameBox.Text = ""
+
+local aimButton = Instance.new("TextButton", guiContainer)
+aimButton.Size = UDim2.new(0.5, 0, 0.3, 0)
+aimButton.Position = UDim2.new(0, 0, 0.6, 0)
+aimButton.Text = "AIM"
+aimButton.BackgroundColor3 = Color3.new(1, 0, 0) -- Красный по умолчанию
+aimButton.TextScaled = true
+
+local espButton = Instance.new("TextButton", guiContainer)
+espButton.Size = UDim2.new(0.5, 0, 0.3, 0)
+espButton.Position = UDim2.new(0.5, 0, 0.6, 0)
+espButton.Text = "ESP"
+espButton.BackgroundColor3 = Color3.new(1, 0, 0) -- Красный по умолчанию
+espButton.TextScaled = true
+
+local function findTarget()
+    target = nil
+    local closestDistance = maxAimDistance or math.huge
+
+    for _, player in pairs(Players:GetPlayers()) do
+        if player ~= LocalPlayer and player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
+            local char = player.Character
+            local rootPart = char:FindFirstChild("HumanoidRootPart")
+            local distance = (LocalPlayer.Character.HumanoidRootPart.Position - rootPart.Position).Magnitude
+
+            if (targetName == "" or player.Name == targetName) and distance < closestDistance then
+                target = rootPart
+                closestDistance = distance
+            end
+        end
+    end
+end
+
+local function aimAtTarget()
+    if Aim_Enabled and target then
+        local distance = (LocalPlayer.Character.HumanoidRootPart.Position - target.Position).Magnitude
+        if maxAimDistance and distance < maxAimDistance then
+            local targetPos = target.Position
+            local camPos = camera.CFrame.Position
+            local newCFrame = CFrame.new(camPos, targetPos)
+
+            -- Жесткость 0.5
+            camera.CFrame = camera.CFrame:Lerp(newCFrame, 0.5)
+        else
+            target = nil
+        end
+    end
+end
+
+local function updateESP()
+    for _, player in pairs(Players:GetPlayers()) do
+        if player ~= LocalPlayer and player.Character then
+            local character = player.Character
+            local highlight = character:FindFirstChild("ESP_Highlight")
+
+            if ESP_Enabled and player.Name == targetName then
+                if not highlight then
+                    highlight = Instance.new("Highlight")
+                    highlight.Name = "ESP_Highlight"
+                    highlight.Parent = character
+                    highlight.FillColor = Color3.fromRGB(255, 0, 0)
+                    highlight.OutlineColor = Color3.fromRGB(255, 255, 255)
+                    highlight.FillTransparency = 0.5
+                    highlight.OutlineTransparency = 0
+                end
+            else
+                if highlight then
+                    highlight:Destroy()
+                end
+            end
+        end
+    end
+end
+
+aimButton.MouseButton1Click:Connect(function()
+    Aim_Enabled = not Aim_Enabled
+    aimButton.BackgroundColor3 = Aim_Enabled and Color3.new(0, 1, 0) or Color3.new(1, 0, 0)
+end)
+
+espButton.MouseButton1Click:Connect(function()
+    ESP_Enabled = not ESP_Enabled
+    espButton.BackgroundColor3 = ESP_Enabled and Color3.new(0, 1, 0) or Color3.new(1, 0, 0)
+    updateESP()
+end)
+
+nameBox.FocusLost:Connect(function()
+    targetName = nameBox.Text
+    updateESP()
+end)
+
+distanceBox.FocusLost:Connect(function()
+    local input = tonumber(distanceBox.Text)
+    if input then
+        maxAimDistance = input
+    else
+        distanceBox.Text = ""
+        maxAimDistance = nil
+    end
+end)
+
+Players.PlayerRemoving:Connect(function(player)
+    if player.Name == targetName then
+        targetName = ""
+        updateESP()
+    end
+end)
+
+game:GetService("RunService").RenderStepped:Connect(function()
+    findTarget()
+    aimAtTarget()
+end)
+
+LocalPlayer.CharacterAdded:Connect(function()
+    task.wait(1)
+    if not screenGui.Parent then
+        screenGui.Parent = LocalPlayer:WaitForChild("PlayerGui")
+    end
+end)
