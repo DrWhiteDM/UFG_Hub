@@ -10,12 +10,7 @@ local targetName = ""
 local maxAimDistance = nil
 local target = nil
 
-local screenGui = Instance.new("ScreenGui")
-screenGui.Parent = LocalPlayer:WaitForChild("PlayerGui")
-
-local screenGui = Instance.new("ScreenGui")
-screenGui.ResetOnSpawn = false
-screenGui.Parent = game:GetService("StarterGui")
+local screenGui = Instance.new("ScreenGui", LocalPlayer:WaitForChild("PlayerGui"))
 
 local toggleButton = Instance.new("TextButton", screenGui)
 toggleButton.Size = UDim2.new(0.15, 0, 0.05, 0)
@@ -155,11 +150,4 @@ end)
 game:GetService("RunService").RenderStepped:Connect(function()
     findTarget()
     aimAtTarget()
-end)
-
-LocalPlayer.CharacterAdded:Connect(function()
-    task.wait(1)
-    if not screenGui.Parent then
-        screenGui.Parent = LocalPlayer:WaitForChild("PlayerGui")
-    end
 end)
