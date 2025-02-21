@@ -67,6 +67,22 @@ espButton.Text = "ESP"
 espButton.BackgroundColor3 = Color3.new(1, 0, 0)
 espButton.TextScaled = true
 
+aimKeyBox = Instance.new("TextBox", guiContainer)
+aimKeyBox.Size = UDim2.new(0.3, 0, 0.3, 0)
+aimKeyBox.Position = UDim2.new(0.7, 0, 0.3, 0)
+aimKeyBox.PlaceholderText = "Enter Aim Key"
+aimKeyBox.TextScaled = true
+aimKeyBox.Text = aimKey
+aimKeyBox.ClearTextOnFocus = false
+
+espKeyBox = Instance.new("TextBox", guiContainer)
+espKeyBox.Size = UDim2.new(0.3, 0, 0.3, 0)
+espKeyBox.Position = UDim2.new(0.7, 0, 0.6, 0)
+espKeyBox.PlaceholderText = "Enter ESP Key"
+espKeyBox.TextScaled = true
+espKeyBox.Text = espKey
+espKeyBox.ClearTextOnFocus = false
+
 -- Functions
 local function findTarget()
     target = nil
@@ -159,10 +175,10 @@ end)
 distanceBox.FocusLost:Connect(function()
     local input = tonumber(distanceBox.Text)
     if input then
-        maxAimDistance = input
+        aimDistance = input
     else
         distanceBox.Text = ""
-        maxAimDistance = nil
+        aimDistance = nil
     end
 end)
 
@@ -173,6 +189,24 @@ smoothnessBox.FocusLost:Connect(function()
     else
         smoothnessBox.Text = ""
         aimSmoothness = nil
+    end
+end)
+
+aimKeyBox.FocusLost:Connect(function()
+    local input = aimKeyBox.Text:upper()
+    if string.match(input, "^[A-Z0-9]$") then
+        aimKey = input
+    else
+        aimKeyBox.Text = ""
+    end
+end)
+
+espKeyBox.FocusLost:Connect(function()
+    local input = espKeyBox.Text:upper()
+    if string.match(input, "^[A-Z0-9]$") then
+        espKey = input
+    else
+        espKeyBox.Text = ""
     end
 end)
 
