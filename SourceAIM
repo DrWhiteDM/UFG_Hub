@@ -92,14 +92,9 @@ espButton.Text = "ESP"
 espButton.BackgroundColor3 = Color3.new(1, 0, 0)
 espButton.TextScaled = true
 
-local highlight = Instance.new("Highlight")
-highlight.Name = "ESP_Highlight"
-highlight.FillColor = Color3.fromRGB(255, 0, 0)
-highlight.OutlineColor = Color3.fromRGB(255, 255, 255)
-highlight.FillTransparency = 0.5
-highlight.OutlineTransparency = 0
-
 -- Functions
+local highlights = {}
+
 local function findTarget()
     if not LocalPlayer.Character or not LocalPlayer.Character:FindFirstChild("HumanoidRootPart") then return end
     target = nil
@@ -134,15 +129,28 @@ local function updateESP()
     for _, player in pairs(Players:GetPlayers()) do
         if player ~= LocalPlayer then
             if ESP_Enabled and player.Name == targetName then
+                if not highlights[player] then
+                    local highlight = Instance.new("Highlight")
+                    highlight.Name = "ESP_Highlight"
+                    highlight.FillColor = Color3.fromRGB(255, 0, 0)
+                    highlight.OutlineColor = Color3.fromRGB(255, 255, 255)
+                    highlight.FillTransparency = 0.5
+                    highlight.OutlineTransparency = 0
+                    highlights[player] = highlight
+                end
+
                 if player.Character then
-                    highlight.Parent = player.Character
+                    highlights[player].Parent = player.Character
                 end
 
                 player.CharacterAdded:Connect(function(character)
-                    highlight.Parent = character
+                    highlights[player].Parent = character
                 end)
             else
-                highlight.Parent = nil
+                if highlights[player] then
+                    highlights[player]:Destroy()
+                    highlights[player] = nil
+                end
             end
         end
     end
