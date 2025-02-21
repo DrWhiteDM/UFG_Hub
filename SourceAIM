@@ -39,7 +39,7 @@ distanceBox.Text = ""
 
 local smoothnessBox = Instance.new("TextBox", guiContainer)
 smoothnessBox.Size = UDim2.new(0.5, 0, 0.3, 0)
-smoothnessBox.Position = UDim2.new(0.55, 0, 0, 0)
+smoothnessBox.Position = UDim2.new(0.5, 0, 0, 0)
 smoothnessBox.PlaceholderText = "Enter smoothness"
 smoothnessBox.PlaceholderColor3 = Color3.new(0, 0, 0)
 smoothnessBox.TextScaled = true
