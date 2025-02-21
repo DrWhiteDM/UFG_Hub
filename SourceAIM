@@ -16,7 +16,7 @@ local toggleButton = Instance.new("TextButton", screenGui)
 toggleButton.Size = UDim2.new(0.15, 0, 0.05, 0)
 toggleButton.Position = UDim2.new(0.425, 0, 0.02, 0)
 toggleButton.Text = "TOGGLE"
-toggleButton.BackgroundColor3 = Color3.new(0.8, 0.8, 0.8) -- Светло-серый
+toggleButton.BackgroundColor3 = Color3.new(0.8, 0.8, 0.8)
 toggleButton.TextScaled = true
 
 local guiContainer = Instance.new("Frame", screenGui)
@@ -29,7 +29,7 @@ local distanceBox = Instance.new("TextBox", guiContainer)
 distanceBox.Size = UDim2.new(1, 0, 0.3, 0)
 distanceBox.Position = UDim2.new(0, 0, 0, 0)
 distanceBox.PlaceholderText = "Enter aim distance"
-distanceBox.PlaceholderColor3 = Color3.new(0, 0, 0) -- Черный цвет текста
+distanceBox.PlaceholderColor3 = Color3.new(0, 0, 0)
 distanceBox.TextScaled = true
 distanceBox.Text = ""
 
@@ -37,7 +37,7 @@ local nameBox = Instance.new("TextBox", guiContainer)
 nameBox.Size = UDim2.new(1, 0, 0.3, 0)
 nameBox.Position = UDim2.new(0, 0, 0.3, 0)
 nameBox.PlaceholderText = "Enter target name"
-nameBox.PlaceholderColor3 = Color3.new(0, 0, 0) -- Черный цвет текста
+nameBox.PlaceholderColor3 = Color3.new(0, 0, 0)
 nameBox.TextScaled = true
 nameBox.Text = ""
 
@@ -45,14 +45,14 @@ local aimButton = Instance.new("TextButton", guiContainer)
 aimButton.Size = UDim2.new(0.5, 0, 0.3, 0)
 aimButton.Position = UDim2.new(0, 0, 0.6, 0)
 aimButton.Text = "AIM"
-aimButton.BackgroundColor3 = Color3.new(1, 0, 0) -- Красный по умолчанию
+aimButton.BackgroundColor3 = Color3.new(1, 0, 0)
 aimButton.TextScaled = true
 
 local espButton = Instance.new("TextButton", guiContainer)
 espButton.Size = UDim2.new(0.5, 0, 0.3, 0)
 espButton.Position = UDim2.new(0.5, 0, 0.6, 0)
 espButton.Text = "ESP"
-espButton.BackgroundColor3 = Color3.new(1, 0, 0) -- Красный по умолчанию
+espButton.BackgroundColor3 = Color3.new(1, 0, 0)
 espButton.TextScaled = true
 
 local function findTarget()
@@ -123,6 +123,11 @@ espButton.MouseButton1Click:Connect(function()
     ESP_Enabled = not ESP_Enabled
     espButton.BackgroundColor3 = ESP_Enabled and Color3.new(0, 1, 0) or Color3.new(1, 0, 0)
     updateESP()
+end)
+
+toggleButton.MouseButton1Click:Connect(function()
+    UI_Visible = not UI_Visible
+    guiContainer.Visible = UI_Visible
 end)
 
 nameBox.FocusLost:Connect(function()
