@@ -5,14 +5,14 @@ local UserInputService = game:GetService("UserInputService")
 
 local ESP_Enabled = false
 local Aim_Enabled = false
-local UI_Visible = true
+local UI_Visible = false
 local targetName = ""
 local maxAimDistance = nil
 local target = nil
 
 local screenGui = Instance.new("ScreenGui", LocalPlayer:WaitForChild("PlayerGui"))
 screenGui.ResetOnSpawn = false
-screenGui.Visible = false
+screenGui.Visible = UI_Visible
 
 local toggleButton = Instance.new("TextButton", screenGui)
 toggleButton.Size = UDim2.new(0.15, 0, 0.05, 0)
@@ -129,7 +129,7 @@ end)
 
 toggleButton.MouseButton1Click:Connect(function()
     UI_Visible = not UI_Visible
-    guiContainer.Visible = UI_Visible
+    screenGui.Visible = UI_Visible
 end)
 
 nameBox.FocusLost:Connect(function()
