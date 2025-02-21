@@ -230,8 +230,8 @@ end)
 
 smoothnessBox.FocusLost:Connect(function()
     local smoothnessInput = tonumber(smoothnessBox.Text)
-    if smoothnessInput then
-        aimSmoothness = smoothnessInput
+    if input then
+        aimSmoothness = input
     else
         smoothnessBox.Text = ""
         aimSmoothness = nil
