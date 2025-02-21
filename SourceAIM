@@ -12,7 +12,7 @@ local target = nil
 
 local screenGui = Instance.new("ScreenGui", LocalPlayer:WaitForChild("PlayerGui"))
 screenGui.ResetOnSpawn = false
-screenGui.Enabled = false
+guiContainer.Visible = UI_Visible
 
 local toggleButton = Instance.new("TextButton", screenGui)
 toggleButton.Size = UDim2.new(0.15, 0, 0.05, 0)
@@ -129,7 +129,7 @@ end)
 
 toggleButton.MouseButton1Click:Connect(function()
     UI_Visible = not UI_Visible
-    screenGui.Enabled = UI_Visible
+    guiContainer.Visible = UI_Visible
 end)
 
 nameBox.FocusLost:Connect(function()
