@@ -10,6 +10,8 @@ local targetName = ""
 local aimDistance = nil
 local aimSmoothness = nil
 local target = nil
+local aimKey = ""
+local espKey = ""
 
 local screenGui = Instance.new("ScreenGui", LocalPlayer:WaitForChild("PlayerGui"))
 screenGui.ResetOnSpawn = false
@@ -193,7 +195,7 @@ smoothnessBox.FocusLost:Connect(function()
 end)
 
 aimKeyBox.FocusLost:Connect(function()
-    local input = aimKeyBox.Text:upper()
+    local input = aimKeyBox.Text:upper(aimKeyBox.Text)
     if string.match(input, "^[A-Z0-9]$") then
         aimKey = input
     else
@@ -202,7 +204,7 @@ aimKeyBox.FocusLost:Connect(function()
 end)
 
 espKeyBox.FocusLost:Connect(function()
-    local input = espKeyBox.Text:upper()
+    local input = espKeyBox.Text:upper(espKeyBox.Text)
     if string.match(input, "^[A-Z0-9]$") then
         espKey = input
     else
